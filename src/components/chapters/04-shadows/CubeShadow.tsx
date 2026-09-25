@@ -208,7 +208,9 @@ export default function CubeShadow({ locale }: { locale: Locale }) {
         shadow.map((p) => wp(p[0]!, p[1]!)),
         tokens,
         1.75,
-        0.09,
+        // A shadow darkens the wall in both themes; light ink would read as a glow in dark mode.
+        tokens.dark ? 0.45 : 0.09,
+        tokens.dark ? '#000' : tokens.ink,
       );
       ctx.restore();
     },
@@ -272,8 +274,9 @@ function drawCube(
   tokens: Draw2DContext['tokens'],
   width: number,
   faceAlpha = 0.05,
+  faceFill: string = tokens.ink,
 ) {
-  ctx.fillStyle = tokens.ink;
+  ctx.fillStyle = faceFill;
   ctx.globalAlpha = faceAlpha;
   for (const f of faces) {
     ctx.beginPath();
