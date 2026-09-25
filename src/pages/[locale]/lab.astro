@@ -1,15 +1,55 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { LOCALES, type Locale } from '../../i18n/locales';
+import { paths } from '../../i18n/paths';
 import { t } from '../../i18n/ui';
 import Lab from '../../components/lab/Lab';
+import { s } from '../../components/lab/strings';
 
 export function getStaticPaths() {
   return LOCALES.map((locale) => ({ params: { locale }, props: { locale } }));
 }
 const { locale } = Astro.props as { locale: Locale };
+const str = s[locale];
 ---
 
 <BaseLayout locale={locale} title={t(locale, 'lab')} description={t(locale, 'labBlurb')}>
+  <header class="lab-head">
+    <h1>{str.title}</h1>
+    <p>{str.intro}</p>
+    <a href={paths.home(locale)}>{str.back}</a>
+  </header>
   <Lab client:only="react" locale={locale} />
 </BaseLayout>
+
+<style>
+  .lab-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-1) var(--space-3);
+    padding: var(--space-3) var(--gutter) var(--space-2);
+  }
+  .lab-head h1 {
+    font-size: var(--step-3);
+  }
+  .lab-head p {
+    flex: 1 1 20em;
+    min-width: 0;
+    margin: 0;
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    text-align: left;
+  }
+  .lab-head a {
+    font-size: var(--step--1);
+  }
+  @media (max-width: 879px) {
+    .lab-head {
+      padding-top: var(--space-2);
+    }
+    .lab-head h1 {
+      font-size: var(--step-2);
+    }
+  }
+</style>

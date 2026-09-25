@@ -1,0 +1,278 @@
+/* The laboratory: a large drawing with an instrument panel beside it
+   (desktop) or beneath it (phones, where the drawing stays pinned). */
+
+.lab {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+  padding: 0 var(--gutter) var(--space-4);
+  font-size: var(--step--1);
+  line-height: 1.4;
+  text-align: left;
+}
+
+.lab-stage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.lab-canvas {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  border: var(--plate-border);
+  background: var(--plate-bg);
+}
+.lab-canvas > div:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -3px;
+}
+
+.lab-caption {
+  margin: 0;
+  color: var(--ink-soft);
+  font-style: italic;
+  line-height: 1.45;
+  min-height: 2.9em;
+}
+:lang(zh) .lab-caption {
+  font-style: normal;
+}
+
+.lab-panel {
+  min-width: 0;
+}
+
+.lab-toggle {
+  display: none;
+  width: 100%;
+  font: inherit;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--ink-faint);
+  padding: 0.6em 0;
+  min-height: 40px;
+  text-align: left;
+  cursor: pointer;
+}
+.lab-toggle::after {
+  content: '';
+  float: right;
+  width: 0.5em;
+  height: 0.5em;
+  margin: 0.35em 0.3em 0 0;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: rotate(-135deg);
+}
+.lab-toggle[aria-expanded='false']::after {
+  transform: rotate(45deg);
+  margin-top: 0.15em;
+}
+
+.lab-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-2) 0 var(--space-3);
+  border-top: 1px solid var(--ink-faint);
+}
+.lab-group:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.lab-group__title {
+  font-family: var(--font-text);
+  font-size: var(--step--1);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-variant: small-caps;
+  color: var(--ink-soft);
+  margin-bottom: var(--space-1);
+}
+:lang(zh) .lab-group__title {
+  font-family: var(--font-cjk);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: none;
+  color: var(--ink);
+}
+
+.lab-field {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+}
+.lab-field--stack {
+  flex-direction: column;
+  align-items: flex-start;
+}
+.lab-field__label {
+  min-width: 5.5em;
+  color: var(--ink);
+}
+.lab-field .ctl-seg {
+  flex-wrap: wrap;
+}
+
+.lab-note {
+  margin: 0;
+  color: var(--ink-soft);
+}
+.lab-name {
+  color: var(--ink);
+  font-style: italic;
+}
+:lang(zh) .lab-name {
+  font-style: normal;
+}
+.lab-count {
+  color: var(--ink-soft);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.lab-axis-hi {
+  color: var(--axis-hi);
+}
+.lab-plane {
+  display: inline-block;
+  min-width: 3.1em;
+  font-style: italic;
+  letter-spacing: 0.02em;
+}
+
+.lab-sub {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+.lab-sub > legend {
+  padding: 0;
+  margin-bottom: 0.1em;
+}
+
+.lab-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  min-height: 32px;
+  cursor: pointer;
+}
+.lab-check input {
+  accent-color: var(--ink);
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+}
+
+.lab-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
+}
+
+.lab-planes {
+  border-top: 1px dotted var(--ink-faint);
+}
+.lab-planes > summary {
+  cursor: pointer;
+  padding: 0.45em 0;
+  min-height: 32px;
+  list-style-position: inside;
+}
+.lab-planes > summary::marker {
+  color: var(--ink-faint);
+}
+
+.lab-plane-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-bottom: 3px;
+}
+.lab-panel .ctl-slider {
+  /* Slider is flex: 1 1 12em for a row; in these columns that would be its height. */
+  flex: none;
+}
+.lab-plane-row .ctl-slider {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.lab-spin {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  color: var(--ink-faint);
+  background: transparent;
+  border: 1px solid var(--ink-faint);
+  border-radius: var(--radius-control);
+  cursor: pointer;
+}
+.lab-spin:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+.lab-spin[aria-pressed='true'] {
+  color: var(--paper);
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+/* Desktop: drawing on the left, pinned; the panel scrolls with the page. */
+@media (min-width: 880px) {
+  .lab {
+    grid-template-columns: minmax(0, 1fr) 21rem;
+    align-items: start;
+    gap: var(--space-4);
+  }
+  .lab-stage {
+    position: sticky;
+    top: var(--space-2);
+    /* Leaves room for the page header on first view, caption included. */
+    height: calc(100dvh - 9rem);
+    min-height: 26rem;
+  }
+}
+
+/* Phones and narrow windows: drawing pinned to the top, controls beneath. */
+@media (max-width: 879px) {
+  .lab {
+    gap: 0;
+  }
+  .lab-stage {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    height: min(56svh, calc(100vw + 4.5em));
+    min-height: 16rem;
+    margin: 0 calc(-1 * var(--gutter));
+    padding: var(--space-1) var(--gutter);
+    background: var(--paper);
+    border-bottom: 1px solid var(--ink-faint);
+  }
+  .lab.is-collapsed .lab-stage {
+    height: min(78svh, calc(100vw + 4.5em));
+  }
+  .lab-caption {
+    font-size: 0.8125rem;
+    min-height: 0;
+  }
+  .lab-toggle {
+    display: block;
+    margin-bottom: var(--space-2);
+  }
+  .lab.is-collapsed .lab-panel__body {
+    display: none;
+  }
+}
