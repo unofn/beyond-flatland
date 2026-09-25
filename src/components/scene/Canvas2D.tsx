@@ -50,6 +50,11 @@ export function Canvas2D({ draw, animate = false, label, bind }: Canvas2DProps) 
     const render = (now: number) => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const { w, h } = size;
+      if (w <= 0 || h <= 0) {
+        // Not laid out yet; the ResizeObserver will call back with a real size.
+        if (animate && onScreen) raf = requestAnimationFrame(render);
+        return;
+      }
       if (el.width !== Math.round(w * dpr) || el.height !== Math.round(h * dpr)) {
         el.width = Math.round(w * dpr);
         el.height = Math.round(h * dpr);
