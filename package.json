@@ -12,7 +12,8 @@
     "astro": "astro",
     "typecheck": "astro check",
     "test": "vitest run",
-    "verify": "pnpm typecheck && pnpm test && pnpm build"
+    "verify": "pnpm typecheck && pnpm test && pnpm build",
+    "shots": "node scripts/shots.ts"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^7.3.1",
@@ -43,6 +44,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "@types/three": "^0.186.0",
+    "playwright": "^1.63.0",
     "typescript": "^6.0.3",
     "vitest": "^5.0.1"
   }

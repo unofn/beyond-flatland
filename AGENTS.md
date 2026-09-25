@@ -13,7 +13,14 @@ pnpm dev          # http://localhost:4321/zh/ ; draft chapters (e.g. /zh/kit/) s
 pnpm test         # vitest, n-dimensional maths
 pnpm typecheck    # astro check (needs TypeScript 6, not 7)
 pnpm verify       # typecheck + test + build; must pass before you report done
+pnpm shots        # Playwright device screenshots (phone/tablet/desktop × light/dark) into shots/
 ```
+
+Visual checks: use `pnpm shots`, not a desktop browser window. It emulates devices
+the way DevTools' device toolbar does (viewport, DPR, touch) in its own headless
+Chromium, and reports console errors and horizontal overflow per page:
+`pnpm shots --base http://localhost:44NN --paths /zh/slicing/,/en/slicing/ --devices phone,small,desktop`.
+Then look at the PNGs under `shots/`.
 
 ## The book
 
@@ -144,9 +151,8 @@ Laid paper, iron-gall ink, Byrne's red / yellow / blue. Libre Caslon + Noto Seri
 
 When starting the dev server, use background mode: `astro dev --background`
 (manage with `astro dev stop | status | logs`). Parallel agents: pass a distinct
-port, e.g. `pnpm astro dev --background --port 44NN`. Browser tabs in the
-background pause requestAnimationFrame, so a blank WebGL canvas in a hidden tab
-is not a bug.
+port, e.g. `pnpm astro dev --background --port 44NN`. Do not resize or drive the
+user's desktop Chrome for layout checks; use `pnpm shots`.
 
 Astro docs: https://docs.astro.build — routing, framework components, content
 collections, i18n.
