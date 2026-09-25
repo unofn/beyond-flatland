@@ -1,0 +1,132 @@
+---
+title: Beyond Four
+subtitle: We stop pretending to see, and watch the patterns change with n
+order: 6
+summary: Push the dimension from 4 to 12, 20 and 100 and watch the cube's shadow, its face counts, the ball's volume and the cube's corners change.
+depth: 4
+---
+
+import PetrieCube from '../../../components/chapters/06-beyond-four/PetrieCube';
+import CountTable from '../../../components/chapters/06-beyond-four/CountTable';
+import BallCharts from '../../../components/chapters/06-beyond-four/BallCharts';
+import CornersFigure from '../../../components/chapters/06-beyond-four/CornersFigure';
+
+Up to four dimensions, we drew by analogy. A Flatlander looks at slices of a cube, so we looked at slices of a tesseract. A cube casts a shadow on a wall, so a tesseract casts one into our space. At every step there was a familiar scene, one dimension down, to hold on to.
+
+From five dimensions on, that trick stops working. We can still draw shadows; we can draw them in any dimension you like. What we can no longer do is convince ourselves that we are *seeing* the thing.
+
+So this chapter changes tactics. We stop pretending. Treat the dimension n as a dial, turn it from 0 to 12, then 20, then 100, and simply watch which patterns move.
+
+## One slider, thirteen cubes
+
+<Scrolly id="petrie">
+  <Plate slot="figure" fill caption="Petrie projection: the shadow cast from the most symmetrical direction">
+    <PetrieCube client:only="react" locale="en" scrolly="petrie" />
+  </Plate>
+  <Step>
+
+  Start with an old friend. This is the cube, seen from an unusual angle: straight down its longest diagonal, where its shadow is a regular hexagon. The three edge colours run along <span class="axis-0">x</span>, <span class="axis-1">y</span> and <span class="axis-2">z</span>.
+
+  </Step>
+  <Step>
+
+  At 4, the tesseract casts its shadow the same way. The outline becomes a regular octagon, and the <span class="axis-3">violet</span> edges run along the fourth direction, <span class="axis-3">w</span>. Earlier chapters worked hard to let you "see" this shape. Here it is just one member of a family.
+
+  </Step>
+  <Step>
+
+  Keep going and the book runs out of colours: the fifth and sixth directions are drawn in grey. The rule never changes. Each new dimension copies the whole figure and joins every vertex to its copy. The vertices double every time, and the outline gains two sides; at six it is a regular twelve-sided polygon.
+
+  </Step>
+  <Step>
+
+  At 12: 4,096 vertices and 24,576 edges. The rim is a rose window of petals; the middle is so crowded that it pools into solid ink. Press "Turn slowly" and it rotates through twelve dimensions.
+
+  To be honest about it: this is not seeing twelve dimensions. It is one shadow, and a hand-picked one, the most symmetrical of all. What we see is a pattern, not a shape.
+
+  </Step>
+</Scrolly>
+
+<SquareSays>Twelve directions, each at right angles to the other eleven. It took me a whole night just to believe in a third.</SquareSays>
+
+<Deeper title="How is this shadow cast?">
+This is the Petrie projection. Draw coordinate axis $k$ (for $k = 0, 1, \dots, n-1$) as the unit vector at angle $k\pi/n$. The vertex $(\pm1, \dots, \pm1)$ then lands at
+
+$$
+\Big(\sum_{k} \pm\cos\tfrac{k\pi}{n},\ \sum_{k} \pm\sin\tfrac{k\pi}{n}\Big).
+$$
+
+The $n$ directions fan evenly around half a circle, so the outline is always a regular $2n$-gon.
+</Deeper>
+
+## Counting
+
+In chapter 1 you counted vertices, edges and squares as a point was dragged into a cube. Now carry that table further down.
+
+There is one rule. Copy the n-cube: every old edge becomes two, and every old vertex sprouts one new edge to its copy. The tesseract has 32 edges and 16 vertices, which is all you need for the next row. Work it out in your head before you reveal it.
+
+<CountTable client:only="react" locale="en" />
+
+Look along the row for twelve dimensions. The biggest number is not vertices, and not edges, but four-dimensional faces: over 126,000 tesseracts. Every row rises and then falls, and its peak drifts to the right as n grows.
+
+An aside: the tesseract in chapter 4 had six planes of rotation, so it needed six sliders. Any two axes make a plane, and twelve axes make 66 pairs. A turntable for a 12-cube would need 66 sliders.
+
+<Deeper title="Where the numbers come from">
+The n-cube has
+
+$$
+f_k(n) = \binom{n}{k}\, 2^{\,n-k}
+$$
+
+faces of dimension $k$: choose which $k$ of the $n$ directions the face spans, then pick one of two sides in each of the other $n-k$. The copy-and-join rule reads $f_k(n+1) = 2f_k(n) + f_{k-1}(n)$: twice the entry above, plus the one above and to the left. The number of rotation planes is $\binom{n}{2} = \frac{n(n-1)}{2}$.
+</Deeper>
+
+## The vanishing ball
+
+Now a second old friend, the ball. Take the ball of radius 1. In one dimension it is a segment of length 2; in two, a disc of area about 3.14; in three, a solid ball of volume about 4.19. As the dimension climbs, does that number keep climbing? Guess, then look.
+
+<Plate caption="Top: volume of the unit ball. Bottom: the share of its surrounding cube it fills. Drag across or tap a bar" ratio="1">
+  <BallCharts client:only="react" locale="en" />
+</Plate>
+
+It rises, peaks in five dimensions at about 5.26, then slides towards zero. The unit ball in twenty dimensions has a volume of 0.026.
+
+Volumes in different dimensions come in different units, so that comparison is a little unfair. The lower chart is the fair one: put the ball in the smallest cube that holds it and ask what share it fills. The disc fills 79% of its square, the ball 52% of its cube. By ten dimensions it is down to 0.25%, and by twenty, less than one part in forty million.
+
+<Deeper title="The volume formula">
+$$
+V_n = \frac{\pi^{n/2}}{\Gamma\!\left(\frac n2 + 1\right)}, \qquad V_n = \frac{2\pi}{n}\, V_{n-2}.
+$$
+
+While $n < 2\pi \approx 6.28$, the volume two dimensions up is larger; past that point every step shrinks it. The surrounding cube $[-1,1]^n$ has volume $2^n$, so the share $V_n / 2^n$ falls faster still.
+</Deeper>
+
+## Crowded corners, thin skin
+
+Where did the cube's volume go? Into its corners. A square's corner is 1.41 from its centre and a cube's is 1.73, while the ball inside only ever reaches out to 1, where it touches each face. The higher you go, the further the corners reach: in a hundred dimensions they are 10 away. Drag the slider and watch.
+
+<Plate caption="A sketch: the distances are true, the directions are not. The red skin is drawn with the same share of area as its true share of volume" ratio="1">
+  <CornersFigure client:only="react" locale="en" />
+</Plate>
+
+The ball is hollowing out as well. Take its outer skin, one tenth of the radius thick. In three dimensions that skin holds 27% of the ball's volume; in twenty, 88%; in a hundred, practically all of it. A high-dimensional ball is like a balloon: everything is in the skin, and the middle is empty.
+
+<SquareSays>In my country, the middle of a thing is where the thing is. Here the middle is empty, and everything has fled to the edges.</SquareSays>
+
+<Deeper title="Why these two numbers?">
+The distance from the centre to the corner $(1, 1, \dots, 1)$ is $\sqrt{1^2 + \cdots + 1^2} = \sqrt{n}$.
+
+The volume of an $n$-ball of radius $r$ is proportional to $r^n$. So the part within radius $0.9$ holds only $0.9^n$ of it, and the skin holds
+
+$$
+1 - 0.9^{\,n},
+$$
+
+about $0.88$ when $n = 20$.
+</Deeper>
+
+## What comes next
+
+All along we have treated a dimension as a direction: one more axis at right angles to all the others. But a dimension does not have to be a direction in space at all.
+
+A person's height, age, weight, resting pulse, hours of sleep: each is a number, and twelve such numbers together are a single point in twelve-dimensional space. In the next chapter, dimensions become a list of facts about things. And once again, like A Square, we will only ever see their shadows.
