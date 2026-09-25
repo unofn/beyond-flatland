@@ -23,7 +23,9 @@ export interface Canvas2DProps {
 /**
  * Crisp 2D canvas (handles device pixel ratio and resizing). Use for
  * Flatland scenes, charts and anything that does not need WebGL.
- * Coordinates passed to `draw` are CSS pixels.
+ * Coordinates passed to `draw` are CSS pixels. A static canvas (no `animate`)
+ * redraws whenever `draw` changes identity, so pass a new function (or a
+ * useCallback with the right deps) when the picture should change.
  */
 export function Canvas2D({ draw, animate = false, label, bind }: Canvas2DProps) {
   const wrap = useRef<HTMLDivElement>(null);
@@ -31,6 +33,7 @@ export function Canvas2D({ draw, animate = false, label, bind }: Canvas2DProps) 
   const tokens = useTokens();
   const drawRef = useRef(draw);
   drawRef.current = draw;
+  const redrawRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     const el = canvas.current;
@@ -39,7 +42,7 @@ export function Canvas2D({ draw, animate = false, label, bind }: Canvas2DProps) 
     const ctx = el.getContext('2d');
     if (!ctx) return;
     let raf = 0;
-    let start = performance.now();
+    const start = performance.now();
     let last = start;
     let size = { w: 0, h: 0 };
     let onScreen = true;
@@ -73,14 +76,21 @@ export function Canvas2D({ draw, animate = false, label, bind }: Canvas2DProps) 
       }
     });
     io.observe(box);
+    redrawRef.current = animate ? null : () => render(performance.now());
     if (animate) raf = requestAnimationFrame(render);
     else render(performance.now());
     return () => {
+      redrawRef.current = null;
       cancelAnimationFrame(raf);
       ro.disconnect();
       io.disconnect();
     };
-  }, [tokens, animate, draw]);
+  }, [tokens, animate]);
+
+  // A static canvas redraws when `draw` changes, without rebuilding observers.
+  useEffect(() => {
+    redrawRef.current?.();
+  }, [draw]);
 
   return (
     <div ref={wrap} role="img" aria-label={label} {...bind} style={{ position: 'absolute', inset: 0, ...(bind?.style ?? {}) }}>

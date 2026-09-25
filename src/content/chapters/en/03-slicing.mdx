@@ -1,0 +1,130 @@
+---
+title: Slices
+subtitle: This time, we are the Flatlanders
+order: 3
+summary: When a tesseract passes through our three-dimensional space, all we can see is its cross-section, a solid that appears, changes shape and vanishes.
+depth: 2
+---
+
+import BallFigure from '../../../components/chapters/03-slicing/BallFigure';
+import TesseractSliceFigure from '../../../components/chapters/03-slicing/TesseractSliceFigure';
+import Cell24Figure from '../../../components/chapters/03-slicing/Cell24Figure';
+import Aside from '../../../components/chapters/03-slicing/Aside.astro';
+
+In the last chapter you stood above Flatland and watched the Sphere pass through. The Flatlanders never saw a sphere. They saw a circle: a point that grew, shrank and was gone.
+
+Now turn it around. Our three-dimensional space is a sheet inside a four-dimensional one. Beyond length, width and height lies a fourth direction, which we will call <span class="axis-3">w</span>. It is at right angles to the other three. You cannot point to it, any more than A Square could point "up".
+
+So what would we see if a four-dimensional object drifted through our space along <span class="axis-3">w</span>?
+
+## A warm-up: the four-dimensional ball
+
+<Plate caption="A four-dimensional ball passing through our space" ratio="4/3">
+  <BallFigure client:only="react" locale="en" />
+</Plate>
+
+Drag the slider, or press Play. As a 4D ball passes through our space, a point appears out of nowhere, swells into a sphere, grows, shrinks back to a point and vanishes.
+
+It is exactly what the Flatlanders saw, one dimension up. They saw circles; we see spheres. Each moment shows you one cross-section of the ball.
+
+<Deeper title="How big is the sphere?">
+
+Give the 4D ball radius 1. Its cross-section at $w$ is every point with $x^2+y^2+z^2 = 1-w^2$: a sphere of radius $r=\sqrt{1-w^2}$. It is largest at $w=0$ and shrinks to a point as $|w|$ approaches 1. Flatland's circle obeys the same formula, minus the $z$.
+
+</Deeper>
+
+## A tesseract passes through
+
+A ball looks the same whichever way it comes. A tesseract does not. It has cells, faces, edges and vertices, and which of them reaches our space first changes the whole story. The cube in the last chapter was no different: face first and corner first gave Flatland two very different shows.
+
+<Scrolly id="tesseract">
+  <Plate slot="figure" fill caption="What a tesseract leaves in our space; drag to walk around it. Inset: one dimension down, a cube through Flatland.">
+    <TesseractSliceFigure client:only="react" locale="en" scrolly="tesseract" />
+  </Plate>
+  <Step>
+
+  **Cell first.** Each of the tesseract's eight cells is a cube. Let one of them arrive flat against our space, and scroll. At first there is nothing. Then a whole cube appears at once, stays exactly as it is, and at once is gone.
+
+  The inset in the corner is the same event one dimension down: a cube meeting Flatland face first. The Flatlanders see a square appear, hold still and vanish.
+
+  </Step>
+  <Step>
+
+  **Face first.** Tilt the tesseract so that a square face leads. A flat square appears and thickens into a box, longer than it is wide. Past the middle it thins again, back to a square.
+
+  In the inset the cube leads with an edge: a line segment widens into a rectangle, then narrows back.
+
+  </Step>
+  <Step>
+
+  **Edge first.** Tilt it further, so that an edge leads. A segment appears and becomes a triangular prism. The prism's corners are shaved away, and at the middle it is a hexagonal prism. Then the same film runs in reverse.
+
+  Look at the inset: a cube arriving corner first shows Flatland a triangle that turns into a hexagon. Every slice here is that triangle-to-hexagon story, stretched out along a line.
+
+  </Step>
+  <Step>
+
+  **Vertex first.** Finally, let a single corner lead. A point appears and grows into a tetrahedron. Its four corners are cut flat, its faces multiply, and at the exact middle it becomes an octahedron.
+
+  The inset keeps the same rhythm: a point, a triangle, its corners clipped, a hexagon in the middle.
+
+  </Step>
+  <Step>
+
+  Past the middle, everything runs backwards. The octahedron grows sharp corners again, turns back into a tetrahedron, shrinks to a point and disappears. Notice that the last tetrahedron points the opposite way from the first, just as the triangle in the inset comes back upside down.
+
+  </Step>
+  <Step>
+
+  **Your turn.** Choose which part arrives first, slide <span class="axis-3">w</span>, and drag the shape to walk around it. One dimension down, the same story.
+
+  </Step>
+</Scrolly>
+
+<SquareSays>
+
+Now you know how it felt. The Sphere kept telling me he was one whole thing, and all I ever saw was a circle that would not sit still.
+
+</SquareSays>
+
+<Aside label="Aside" title="w is not time">
+
+We watched the slice change as we scrolled, one shape after another, so it is tempting to call the fourth dimension time. In this book it is not.
+
+<span class="axis-3">w</span> is a direction in space, like length, width and height, only at right angles to all three. The whole tesseract is there at once: eight cells, twenty-four faces, thirty-two edges, sixteen vertices, none missing. The only thing that changes is which slice we look at.
+
+The time was yours: you looked at one slice after another. While the Flatlanders watched a circle grow and shrink, the whole Sphere was there all along.
+
+</Aside>
+
+## Why an octahedron?
+
+The surprise of the vertex-first pass is its middle. Cut a cube through its centre this way and you get a hexagon. Cut a tesseract and you get an octahedron: six corners, eight triangular faces.
+
+<Deeper title="Counting the corners in the middle">
+
+The tesseract's sixteen vertices are $(\pm1,\pm1,\pm1,\pm1)$. Vertex first, the middle slice is the hyperplane $x+y+z+w=0$. The vertices with exactly two $+1$s and two $-1$s lie on it, and there are $\binom{4}{2}=6$ of them: the six corners of the octahedron.
+
+The cube's middle slice, $x+y+z=0$, contains no vertex at all. It cuts six edges at their midpoints, which is why Flatland sees a hexagon.
+
+</Deeper>
+
+## For the curious: the 24-cell
+
+<Plate caption="The cross-section a 24-cell leaves in our space" ratio="1">
+  <Cell24Figure client:only="react" locale="en" />
+</Plate>
+
+The tesseract has a relative in three dimensions: the cube. Four-dimensional space also holds a regular solid with no relative in 3D at all, the 24-cell. We cannot see it whole, but we can slice it.
+
+Cell first, an octahedron appears, has its corners cut into a truncated octahedron, becomes a cuboctahedron at the middle, and goes back the way it came. Vertex first, a point opens into a cube, and the middle slice is a rhombic dodecahedron.
+
+<SquareSays>
+
+So there are shapes you three-dimensional people can only ever see in slices, too. I find that oddly comforting.
+
+</SquareSays>
+
+## Another way to look
+
+Slicing is one way to see four dimensions: look at one slice at a time and string them together in your head. There is another. In the next chapter we stop cutting and shine a light instead, and look at the shadow a tesseract casts.
