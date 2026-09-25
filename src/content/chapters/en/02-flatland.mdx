@@ -1,0 +1,108 @@
+---
+title: Flatland
+subtitle: A world of length and breadth, and a visitor from above
+order: 2
+summary: See the world through the eye of a two-dimensional being, then watch a sphere from Spaceland pass through Flatland.
+depth: 1
+---
+
+import RetinaFigure from '../../../components/chapters/02-flatland/RetinaFigure';
+import SphereFigure from '../../../components/chapters/02-flatland/SphereFigure';
+import CubeFigure from '../../../components/chapters/02-flatland/CubeFigure';
+
+In 1884 a London schoolmaster, Edwin Abbott, published a short book about a place called Flatland. Everything there lives on an endless sheet with no thickness: houses, trees, people, all flat figures. They slide forwards, backwards, left and right. There is no up and no down. Not forbidden: simply not there.
+
+The book is narrated by a square. We will call him A Square.
+
+## What A Square sees
+
+You are looking down on a small patch of Flatland. A Square (in red) stands in the middle, with a pentagonal house and a few polygon neighbours around him.
+
+<Plate caption="Flatland from above. Tap or drag to move A Square, and use the slider to turn him; with the drawing focused, the arrow keys work too. The strip beneath is what he sees." ratio="1">
+  <RetinaFigure client:only="react" locale="en" />
+</Plate>
+
+Turn him all the way round and watch the strip.
+
+That strip is what A Square actually sees. His eye lies in the sheet too, so every line of sight skims along the surface and stops at the first edge it meets. He never sees *into* anything. His whole view is a single line: a stretch of something here, a stretch of something there. The thick red strokes on the map are the edges he can see right now.
+
+So how does he tell one neighbour from another? Abbott gave Flatland a permanent light fog. Distant things are faint, near things are distinct. The stronger a part of the strip, the closer that edge is to him; things on the edge of the fog fade almost to the colour of the page.
+
+Turn him towards the triangle at the upper right and walk him a little closer. It points a corner straight at him, so the middle of its stretch is strongest and it fades on both sides: the tip is nearest and the two sides fall away. Now face a flat wall of the house. That stretch is shaded far more evenly. This is how Flatlanders read the world: from the way the fog grades across a stretch they judge corner or side, triangle or circle.
+
+What you take in at a glance, he has to work out.
+
+## The Sphere visits
+
+One day A Square hears a voice. It says it comes from *above*.
+
+<Scrolly id="sphere">
+  <Plate slot="figure" fill caption="One event, three views: Spaceland looking obliquely at the plane, Flatland from above, and the single line A Square sees.">
+    <SphereFigure client:only="react" locale="en" scrolly="sphere" />
+  </Plate>
+  <Step>
+
+  The voice belongs to the Sphere, a visitor from Spaceland. He hangs just above Flatland, not far from A Square. Yet in Flatland there is nothing at all. He is not in the sheet, so A Square can neither see him nor touch him.
+
+  </Step>
+  <Step>
+
+  The Sphere starts to sink. The moment he touches the sheet, a point appears in Flatland out of nowhere. In A Square's view it is a faint speck, barely there.
+
+  </Step>
+  <Step>
+
+  He keeps sinking, and the point opens into a circle that grows and grows. When his centre reaches the sheet the circle is as wide as the Sphere himself. In A Square's eye the speck has stretched into a line segment, wider and wider.
+
+  </Step>
+  <Step>
+
+  Further down, the circle shrinks, closes to a point and is gone. The Sphere hasn't gone anywhere; he has only moved a little way *down*. From inside Flatland, something appeared by itself, grew, and vanished into thin air.
+
+  </Step>
+  <Step>
+
+  Now it is your turn. Drag the slider and stop the Sphere at any height. Held still, he looks like an ordinary circle, no different from any other Flatlander.
+
+  </Step>
+</Scrolly>
+
+<SquareSays>A circle swelled and shrank in front of me and then was simply not there. He said he was many circles in one, and told me to look *upward*. I pointed north. I pointed south. I could not point to where he meant.</SquareSays>
+
+The circle that appears in Flatland is the slice where the Sphere meets the sheet: a cross-section. There is one Sphere but endlessly many cross-sections, one for every height. A Square only ever sees one of them at a time.
+
+<Deeper title="How big is the cross-section?">
+
+Let the Sphere have radius $r$, with his centre a height $h$ above the sheet. The centre, the middle of the cross-section, and any point on its rim form a right triangle: the hypotenuse is $r$, one leg is $h$, and the other is the cross-section's radius $\rho$. By Pythagoras,
+
+$$
+\rho = \sqrt{r^2 - h^2}
+$$
+
+At $h = r$ we get $\rho = 0$, the point at first touch; at $h = 0$, $\rho = r$, the largest circle; for $|h| > r$ the square root has nothing to take, and Flatland is empty.
+
+</Deeper>
+
+## Other visitors
+
+A sphere looks the same whichever way it arrives; it is too round to care. A cube is different. What Flatland sees depends on how it comes through.
+
+<Plate caption="Switch the cube's orientation, then drag the slider or press play to pass it through Flatland." ratio="1">
+  <CubeFigure client:only="react" locale="en" />
+</Plate>
+
+Choose *face first*. The instant the bottom face touches the sheet, a whole square appears in Flatland. It doesn't move or change size until the top face leaves, and then it is gone at once. A Square would simply think a new neighbour had arrived.
+
+Now choose *corner first*. A point, then a triangle, growing; then its three corners are cut off and it becomes a hexagon, with all six sides equal at the exact middle; then it closes into a triangle turned the other way, and back to a point.
+
+One cube, two quite different stories. A Flatlander who wanted to know what the visitor really was would have to record the slices one by one and stack them up in the mind.
+
+## Now it's our turn
+
+Now move everything up one dimension.
+
+We live in Spaceland, with length, breadth and height, as much at home in it as A Square is on his sheet. Suppose a four-dimensional object passed through our space along a fourth direction. What would we see? Never the whole of it: only its cross-section. A solid that appears from nowhere, grows, changes shape and vanishes.
+
+<SquareSays>Your turn. Don't be too quick to say the direction isn't there. That is what I said.</SquareSays>
+
+In the next chapter, a tesseract passes through our space.
