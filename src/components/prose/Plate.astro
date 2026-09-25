@@ -1,0 +1,79 @@
+---
+/**
+ * A figure plate: framed illustration with an auto-numbered caption.
+ * Put an interactive island inside; give it a fallback of the same aspect
+ * ratio so the page does not jump while it loads.
+ *
+ *   <Plate caption="A sphere visits Flatland" ratio="4/3">
+ *     <SphereFigure client:only="react" locale="en" />
+ *   </Plate>
+ */
+interface Props {
+  caption?: string;
+  /** CSS aspect-ratio of the drawing area, e.g. "1", "4/3". Default 1. */
+  ratio?: string;
+  /** Let the plate fill its container height instead (inside a Scrolly). */
+  fill?: boolean;
+  class?: string;
+}
+const { caption, ratio = '1', fill = false, class: className } = Astro.props;
+---
+
+<figure class:list={['plate', { 'plate--fill': fill }, className]}>
+  <div class="plate__art" style={fill ? undefined : `aspect-ratio: ${ratio}`}>
+    <slot />
+  </div>
+  {caption && <figcaption class="plate__caption">{caption}</figcaption>}
+  {!caption && Astro.slots.has('caption') && (
+    <figcaption class="plate__caption"><slot name="caption" /></figcaption>
+  )}
+</figure>
+
+<style is:global>
+  body {
+    counter-reset: plate;
+  }
+  .plate {
+    counter-increment: plate;
+    margin: var(--space-4) 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .plate--fill {
+    margin: 0;
+    height: 100%;
+  }
+  .plate__art {
+    position: relative;
+    width: 100%;
+    min-height: 0;
+    border: var(--plate-border);
+    background: var(--plate-bg);
+  }
+  .plate--fill .plate__art {
+    flex: 1;
+  }
+  .plate__art > * {
+    position: absolute;
+    inset: 0;
+  }
+  .plate__caption {
+    font-size: var(--step--1);
+    line-height: 1.5;
+    color: var(--ink-soft);
+    font-style: italic;
+    text-align: left;
+  }
+  .plate__caption::before {
+    content: 'Fig. ' counter(plate) '. ';
+    font-style: normal;
+    color: var(--ink);
+  }
+  :lang(zh) .plate__caption {
+    font-style: normal;
+  }
+  :lang(zh) .plate__caption::before {
+    content: '图 ' counter(plate) '\3000';
+  }
+</style>

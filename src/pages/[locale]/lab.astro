@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { LOCALES, type Locale } from '../../i18n/locales';
+import { t } from '../../i18n/ui';
+import Lab from '../../components/lab/Lab';
+
+export function getStaticPaths() {
+  return LOCALES.map((locale) => ({ params: { locale }, props: { locale } }));
+}
+const { locale } = Astro.props as { locale: Locale };
+---
+
+<BaseLayout locale={locale} title={t(locale, 'lab')} description={t(locale, 'labBlurb')}>
+  <Lab client:only="react" locale={locale} />
+</BaseLayout>

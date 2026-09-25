@@ -1,0 +1,122 @@
+/*
+ * Design tokens. The visual reference is Victorian geometry printing:
+ * Oliver Byrne's 1847 Euclid (red / yellow / blue on laid paper) and the
+ * 1884 first edition of Flatland. The three Byrne primaries are the three
+ * familiar axes; the fourth axis gets a colour the old books never printed.
+ *
+ * Axis colour convention (use everywhere, in text and figures):
+ *   x → --axis-0 red, y → --axis-1 yellow, z → --axis-2 blue, w → --axis-3 violet,
+ *   axes 4+ → --axis-hi (ink grey).
+ */
+:root {
+  color-scheme: light;
+
+  --paper: #efeee7;
+  --paper-shade: #e3e1d6;
+  --paper-edge: #cfccbf;
+  --ink: #231f1c;
+  --ink-soft: #5e5850;
+  --ink-faint: #9a948a;
+
+  --byrne-red: #bf2e24;
+  --byrne-yellow: #e1a518;
+  --byrne-yellow-ink: #8f6600; /* yellow that stays legible as text or a thin line */
+  --byrne-blue: #1d4f91;
+  --beyond-violet: #7b3f98;
+
+  --axis-0: var(--byrne-red);
+  --axis-1: var(--byrne-yellow-ink);
+  --axis-2: var(--byrne-blue);
+  --axis-3: var(--beyond-violet);
+  --axis-hi: var(--ink-soft);
+
+  /* Fills for faces / regions (lighter than line colours). */
+  --fill-0: color-mix(in oklab, var(--byrne-red) 22%, var(--paper));
+  --fill-1: color-mix(in oklab, var(--byrne-yellow) 35%, var(--paper));
+  --fill-2: color-mix(in oklab, var(--byrne-blue) 20%, var(--paper));
+  --fill-3: color-mix(in oklab, var(--beyond-violet) 20%, var(--paper));
+
+  --accent: var(--byrne-red);
+  --focus: var(--byrne-blue);
+
+  /* Type */
+  --font-text: 'Libre Caslon Text', 'Noto Serif SC', 'Songti SC', serif;
+  --font-display: 'Libre Caslon Display', 'Libre Caslon Text', 'Noto Serif SC', 'Songti SC', serif;
+  --font-cjk: 'Noto Serif SC', 'Songti SC', serif;
+
+  /* Classic typographic scale (Bringhurst), in rem at 16px root. */
+  --step--1: 0.875rem; /* 14 captions, controls */
+  --step-0: 1.1875rem; /* 19 body */
+  --step-1: 1.3125rem; /* 21 */
+  --step-2: 1.5rem; /* 24 */
+  --step-3: 2.25rem; /* 36 */
+  --step-4: 3rem; /* 48 */
+  --step-5: 4.5rem; /* 72 */
+
+  --leading: 1.62;
+  --leading-cjk: 1.9;
+  --measure: 34em;
+
+  /* Space: multiples of the body line */
+  --line: calc(var(--step-0) * var(--leading));
+  --space-1: calc(var(--line) * 0.25);
+  --space-2: calc(var(--line) * 0.5);
+  --space-3: var(--line);
+  --space-4: calc(var(--line) * 2);
+  --space-5: calc(var(--line) * 4);
+
+  --gutter: 16px;
+  --rule: 1px solid var(--paper-edge);
+  --radius-control: 2px;
+
+  /* Figure plates */
+  --plate-bg: var(--paper);
+  --plate-border: 1px solid var(--ink-faint);
+}
+
+@media (min-width: 720px) {
+  :root {
+    --gutter: 32px;
+  }
+}
+
+@media (max-width: 719px) {
+  :root {
+    --step-0: 1.0625rem; /* 17 */
+    --step-3: 1.875rem;
+    --step-4: 2.25rem;
+    --step-5: 3rem;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --paper: #16171b;
+    --paper-shade: #1f2026;
+    --paper-edge: #34353c;
+    --ink: #e8e4d8;
+    --ink-soft: #aaa497;
+    --ink-faint: #6d6a63;
+    --byrne-red: #e2594b;
+    --byrne-yellow: #edbb3f;
+    --byrne-yellow-ink: #e3b23a;
+    --byrne-blue: #72a0e3;
+    --beyond-violet: #b784d6;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --paper: #16171b;
+  --paper-shade: #1f2026;
+  --paper-edge: #34353c;
+  --ink: #e8e4d8;
+  --ink-soft: #aaa497;
+  --ink-faint: #6d6a63;
+  --byrne-red: #e2594b;
+  --byrne-yellow: #edbb3f;
+  --byrne-yellow-ink: #e3b23a;
+  --byrne-blue: #72a0e3;
+  --beyond-violet: #b784d6;
+}

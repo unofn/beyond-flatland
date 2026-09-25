@@ -1,0 +1,21 @@
+---
+import { DEFAULT_LOCALE } from '../i18n/locales';
+import { paths } from '../i18n/paths';
+const fallback = paths.home(DEFAULT_LOCALE);
+const en = paths.home('en');
+---
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Beyond Flatland</title>
+    <meta http-equiv="refresh" content={`0; url=${fallback}`} />
+    <script is:inline define:vars={{ fallback, en }}>
+      const langs = navigator.languages || [navigator.language];
+      const zh = langs.some((l) => l && l.toLowerCase().startsWith('zh'));
+      location.replace(zh ? fallback : en);
+    </script>
+  </head>
+  <body></body>
+</html>

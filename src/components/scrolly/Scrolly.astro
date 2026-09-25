@@ -1,0 +1,38 @@
+---
+/**
+ * Scroll-driven section: a sticky figure plus a column of steps.
+ *
+ *   <Scrolly id="sphere">
+ *     <SphereFigure slot="figure" client:only="react" scrolly="sphere" locale={frontmatter.locale} />
+ *     <Step>First paragraph…</Step>
+ *     <Step>Second paragraph…</Step>
+ *   </Scrolly>
+ *
+ * The figure reads { step, progress, total } with useScrolly('sphere').
+ * `id` must be unique on the page.
+ */
+interface Props {
+  id: string;
+  /** Figure on the left instead of the right (desktop only). */
+  flip?: boolean;
+}
+const { id, flip = false } = Astro.props;
+---
+
+<section class:list={['scrolly', { 'scrolly--flip': flip }]} data-scrolly={id}>
+  <div class="scrolly__figure">
+    <slot name="figure" />
+  </div>
+  <div class="scrolly__steps">
+    <slot />
+  </div>
+</section>
+
+<script>
+  import { initScrolly } from './driver';
+  initScrolly();
+</script>
+
+<style is:global>
+  @import './scrolly.css';
+</style>

@@ -1,0 +1,43 @@
+---
+import { LOCALES, LOCALE_NAMES, LOCALE_TAGS, type Locale } from '../../i18n/locales';
+import { switchLocalePath } from '../../i18n/paths';
+import { t } from '../../i18n/ui';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const path = Astro.url.pathname;
+---
+
+<nav class="lang" aria-label={t(locale, 'language')}>
+  {
+    LOCALES.map((l) =>
+      l === locale ? (
+        <span aria-current="true" lang={LOCALE_TAGS[l]}>{LOCALE_NAMES[l]}</span>
+      ) : (
+        <a href={switchLocalePath(path, l)} hreflang={LOCALE_TAGS[l]} lang={LOCALE_TAGS[l]}>
+          {LOCALE_NAMES[l]}
+        </a>
+      ),
+    )
+  }
+</nav>
+
+<style>
+  .lang {
+    display: flex;
+    gap: 0.9em;
+    font-size: var(--step--1);
+  }
+  .lang span {
+    color: var(--ink);
+  }
+  .lang a {
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+  .lang a:hover {
+    color: var(--accent);
+  }
+</style>

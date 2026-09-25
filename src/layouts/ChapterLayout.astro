@@ -1,0 +1,125 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import type { Locale } from '../i18n/locales';
+import { paths } from '../i18n/paths';
+import { t } from '../i18n/ui';
+import { parseChapterId, type Chapter } from '../lib/content/chapters';
+
+interface Props {
+  locale: Locale;
+  chapter: Chapter;
+  prev?: Chapter;
+  next?: Chapter;
+}
+const { locale, chapter, prev, next } = Astro.props;
+const { title, subtitle, summary, order, depth } = chapter.data;
+---
+
+<BaseLayout locale={locale} title={title} description={summary}>
+  <article class="chapter" data-depth={depth}>
+    <header class="chapter__head">
+      <p class="chapter__number">{t(locale, 'chapter', { n: order })}</p>
+      <h1 class="chapter__title">{title}</h1>
+      <p class="chapter__subtitle">{subtitle}</p>
+    </header>
+    <div class="chapter__body prose">
+      <slot />
+    </div>
+    <nav class="chapter__nav" aria-label={t(locale, 'contents')}>
+      {
+        prev ? (
+          <a rel="prev" href={paths.chapter(locale, parseChapterId(prev.id).slug)}>
+            <span class="chapter__nav-dir">{t(locale, 'prev')}</span>
+            <span>{prev.data.title}</span>
+          </a>
+        ) : (
+          <a href={paths.home(locale)}>
+            <span class="chapter__nav-dir">{t(locale, 'backToContents')}</span>
+          </a>
+        )
+      }
+      {
+        next ? (
+          <a rel="next" href={paths.chapter(locale, parseChapterId(next.id).slug)}>
+            <span class="chapter__nav-dir">{t(locale, 'next')}</span>
+            <span>{next.data.title}</span>
+          </a>
+        ) : (
+          <a rel="next" href={paths.lab(locale)}>
+            <span class="chapter__nav-dir">{t(locale, 'next')}</span>
+            <span>{t(locale, 'lab')}</span>
+          </a>
+        )
+      }
+    </nav>
+  </article>
+</BaseLayout>
+
+<style is:global>
+  .chapter {
+    padding: 0 var(--gutter);
+    max-width: 1320px;
+    margin: 0 auto;
+  }
+  .chapter__head {
+    max-width: var(--measure);
+    padding: var(--space-5) 0 var(--space-4);
+  }
+  .chapter__number {
+    font-style: italic;
+    color: var(--ink-soft);
+    margin-bottom: var(--space-2);
+  }
+  :lang(zh) .chapter__number {
+    font-style: normal;
+  }
+  .chapter__title {
+    font-size: var(--step-5);
+  }
+  .chapter__subtitle {
+    margin-top: var(--space-2);
+    font-size: var(--step-1);
+    color: var(--ink-soft);
+  }
+
+  /* Prose flows at reading measure; Scrolly and wide plates break out. */
+  .prose > :not(.scrolly, .plate--wide) {
+    max-width: var(--measure);
+  }
+  .prose h2 {
+    font-size: var(--step-3);
+    margin: var(--space-5) 0 var(--space-3);
+  }
+  .prose h3 {
+    font-size: var(--step-2);
+    margin: var(--space-4) 0 var(--space-2);
+  }
+  .prose .katex-display {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: var(--space-1) 0;
+  }
+
+  .chapter__nav {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin: var(--space-5) 0 var(--space-4);
+    padding-top: var(--space-3);
+    border-top: var(--rule);
+  }
+  .chapter__nav a {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    max-width: 48%;
+  }
+  .chapter__nav a[rel='next'] {
+    text-align: right;
+    margin-left: auto;
+  }
+  .chapter__nav-dir {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+</style>

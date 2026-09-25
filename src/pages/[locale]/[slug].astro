@@ -1,0 +1,32 @@
+---
+import { render } from 'astro:content';
+import ChapterLayout from '../../layouts/ChapterLayout.astro';
+import { LOCALES, type Locale } from '../../i18n/locales';
+import { getChapters, parseChapterId, type Chapter } from '../../lib/content/chapters';
+import Scrolly from '../../components/scrolly/Scrolly.astro';
+import Step from '../../components/scrolly/Step.astro';
+import Plate from '../../components/prose/Plate.astro';
+import Deeper from '../../components/prose/Deeper.astro';
+import SquareSays from '../../components/prose/SquareSays.astro';
+
+export async function getStaticPaths() {
+  const out: { params: { locale: Locale; slug: string }; props: { locale: Locale; chapter: Chapter; prev?: Chapter; next?: Chapter } }[] = [];
+  for (const locale of LOCALES) {
+    const chapters = await getChapters(locale);
+    chapters.forEach((chapter, i) => {
+      out.push({
+        params: { locale, slug: parseChapterId(chapter.id).slug },
+        props: { locale, chapter, prev: chapters[i - 1], next: chapters[i + 1] },
+      });
+    });
+  }
+  return out;
+}
+
+const { locale, chapter, prev, next } = Astro.props as { locale: Locale; chapter: Chapter; prev?: Chapter; next?: Chapter };
+const { Content } = await render(chapter);
+---
+
+<ChapterLayout locale={locale} chapter={chapter} prev={prev} next={next}>
+  <Content components={{ Scrolly, Step, Plate, Deeper, SquareSays }} />
+</ChapterLayout>

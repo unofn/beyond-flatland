@@ -1,0 +1,78 @@
+.scrolly {
+  --scrolly-line: 45%;
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, var(--measure)) minmax(0, 1fr);
+  grid-template-areas: 'steps figure';
+  column-gap: var(--space-4);
+  margin: var(--space-4) 0;
+}
+
+.scrolly--flip {
+  grid-template-columns: minmax(0, 1fr) minmax(0, var(--measure));
+  grid-template-areas: 'figure steps';
+}
+
+.scrolly__figure {
+  grid-area: figure;
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3) 0;
+}
+
+.scrolly__figure > * {
+  width: 100%;
+  max-height: 100%;
+}
+
+.scrolly__steps {
+  grid-area: steps;
+  padding: 30svh 0 45svh;
+}
+
+.step {
+  min-height: 70svh;
+  opacity: 0.45;
+  transition: opacity 240ms ease;
+}
+
+.step.is-active {
+  opacity: 1;
+}
+
+.step > :last-child {
+  margin-bottom: 0;
+}
+
+/* Narrow screens: figure pinned to the top half, steps scroll beneath it. */
+@media (max-width: 899px) {
+  .scrolly,
+  .scrolly--flip {
+    --scrolly-line: 72%;
+    display: block;
+    margin-left: calc(var(--gutter) * -1);
+    margin-right: calc(var(--gutter) * -1);
+  }
+
+  .scrolly__figure {
+    top: 0;
+    height: 52svh;
+    padding: var(--space-1) var(--gutter);
+    background: var(--paper);
+    z-index: 2;
+    border-bottom: var(--rule);
+  }
+
+  .scrolly__steps {
+    position: relative;
+    padding: 8svh var(--gutter) 40svh;
+  }
+
+  .step {
+    min-height: 55svh;
+  }
+}

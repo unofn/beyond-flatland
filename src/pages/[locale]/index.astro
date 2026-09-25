@@ -1,0 +1,44 @@
+---
+/**
+ * Cover and contents. Owned by the cover agent; this is the functional
+ * baseline it replaces.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { LOCALES, type Locale } from '../../i18n/locales';
+import { paths } from '../../i18n/paths';
+import { t } from '../../i18n/ui';
+import { getChapters, parseChapterId } from '../../lib/content/chapters';
+
+export function getStaticPaths() {
+  return LOCALES.map((locale) => ({ params: { locale }, props: { locale } }));
+}
+const { locale } = Astro.props as { locale: Locale };
+const chapters = await getChapters(locale);
+---
+
+<BaseLayout locale={locale} title={t(locale, 'siteTitle')} description={t(locale, 'siteSubtitle')}>
+  <div class="contents">
+    <h1>{t(locale, 'siteTitle')}</h1>
+    <p>{t(locale, 'siteSubtitle')}</p>
+    <h2>{t(locale, 'contents')}</h2>
+    <ol>
+      {
+        chapters.map((c) => (
+          <li>
+            <a href={paths.chapter(locale, parseChapterId(c.id).slug)}>{c.data.title}</a>
+            <p>{c.data.summary}</p>
+          </li>
+        ))
+      }
+      <li><a href={paths.lab(locale)}>{t(locale, 'lab')}</a></li>
+    </ol>
+  </div>
+</BaseLayout>
+
+<style>
+  .contents {
+    max-width: var(--measure);
+    margin: 0 auto;
+    padding: var(--space-4) var(--gutter);
+  }
+</style>

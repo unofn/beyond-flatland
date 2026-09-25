@@ -1,0 +1,42 @@
+---
+title: 组件样张
+subtitle: 公共组件的用法示例（仅开发环境可见）
+order: 99
+summary: 章节作者参考用的组件样张。
+depth: 4
+draft: true
+---
+
+import TesseractDemo from '../../../components/chapters/_kit/TesseractDemo';
+
+正文按照书页的宽度排版。行内公式写作 $V = 2^n$，独立公式：
+
+$$
+V_n = \frac{\pi^{n/2}}{\Gamma\left(\frac n2 + 1\right)}
+$$
+
+<SquareSays>我原以为世界只有长和宽。</SquareSays>
+
+<Deeper title="为什么是 2 的 n 次方？">
+每多一个维度，已有的每个顶点都被复制一份。
+</Deeper>
+
+<Scrolly id="kit">
+  <Plate slot="figure" fill caption="一个超立方体">
+    <TesseractDemo client:only="react" locale="zh" scrolly="kit" />
+  </Plate>
+  <Step>
+
+  **第一步。** 拖动图形旋转它；x–w 滑块让它在第四个方向上转动。
+
+  </Step>
+  <Step>
+
+  **第二步。** 现在只看它与我们三维空间相交的部分。
+
+  </Step>
+</Scrolly>
+
+<Plate caption="独立插图，不随滚动变化" ratio="4/3">
+  <TesseractDemo client:only="react" locale="zh" />
+</Plate>
