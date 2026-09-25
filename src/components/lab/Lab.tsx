@@ -126,11 +126,15 @@ export default function Lab({ locale }: { locale: Locale }) {
 
   // Section geometry that the controls need (the scene recomputes per frame).
   const frame = useMemo(() => hyperplaneFrame(state.normal, dim), [state.normal, dim]);
+  // Once spin has turned the object, its extent along the normal keeps changing;
+  // every object has circumradius 1, so [-1, 1] then always covers it.
+  const spun = playing || rot.spinMat.some((row, i) => row.some((x, j) => Math.abs(x - (i === j ? 1 : 0)) > 1e-9));
   const range = useMemo(() => {
+    if (spun) return [-1, 1] as const;
     const a = rotationFromAngles(dim, state.angles);
     const [lo, hi] = sliceRange({ ...poly, vertices: poly.vertices.map((v) => apply(a, v)) }, frame.normal);
     return [Math.round(lo * 1000) / 1000, Math.round(hi * 1000) / 1000] as const;
-  }, [poly, dim, state.angles, frame]);
+  }, [poly, dim, state.angles, frame, spun]);
   const offset = Math.min(range[1], Math.max(range[0], state.offset));
 
   const presets = useMemo(

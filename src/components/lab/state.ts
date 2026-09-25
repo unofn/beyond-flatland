@@ -96,7 +96,8 @@ export function encodeState(s: LabState): string {
   const q = new URLSearchParams();
   const dim = dimOf(s.family, s.n);
   if (s.family !== d.family) q.set('o', s.family);
-  if (s.family !== 'cell24' && s.n !== d.n) q.set('n', String(s.n));
+  // Kept for the 24-cell too, so switching back to a family restores the linked n.
+  if (s.n !== d.n) q.set('n', String(s.n));
   if (s.view !== d.view) q.set('v', s.view === 'section' ? 's' : 'p');
   if (s.mode !== d.mode) q.set('m', 'o');
   if (s.distance !== d.distance) q.set('d', String(round(s.distance, 2)));
