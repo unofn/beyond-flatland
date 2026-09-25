@@ -12,6 +12,7 @@ import { LOCALES, DEFAULT_LOCALE } from './src/i18n/locales.ts';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://beyond-flatland.pages.dev',
+  devToolbar: { enabled: false },
   i18n: {
     locales: [...LOCALES],
     defaultLocale: DEFAULT_LOCALE,
