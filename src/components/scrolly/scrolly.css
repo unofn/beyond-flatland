@@ -52,7 +52,7 @@
 @media (max-width: 899px) {
   .scrolly,
   .scrolly--flip {
-    --scrolly-line: 72%;
+    --scrolly-line: 76%;
     display: block;
     margin-left: calc(var(--gutter) * -1);
     margin-right: calc(var(--gutter) * -1);
@@ -60,7 +60,7 @@
 
   .scrolly__figure {
     top: 0;
-    height: 52svh;
+    height: 60svh;
     padding: var(--space-1) var(--gutter);
     background: var(--paper);
     z-index: 2;
@@ -74,5 +74,20 @@
 
   .step {
     min-height: 55svh;
+  }
+
+  /* Every pixel of the pinned figure counts: short caption, tight controls. */
+  .scrolly__figure .plate {
+    gap: var(--space-1);
+  }
+  .scrolly__figure .plate__caption {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 0.8125rem;
+  }
+  .scrolly__figure .ctl-row {
+    gap: 2px var(--space-2);
   }
 }

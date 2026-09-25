@@ -116,6 +116,11 @@ export function useNdRotation(opts: NdRotationOptions & { autoplay?: boolean }) 
     rot.spin = opts.spin ?? {};
   }, [rot, JSON.stringify(opts.spin ?? {})]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // A new NdRotation (n changed) must inherit the play state the UI shows.
+  useEffect(() => {
+    rot.playing = playing;
+  }, [rot]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const setPlaying = useCallback(
     (p: boolean) => {
       rot.playing = p;

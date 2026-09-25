@@ -16,12 +16,27 @@ export interface NdObjectProps {
   /** 'axis' colours each edge by the axis it runs along; any CSS colour for one ink. */
   color?: 'axis' | string;
   lineWidth?: number;
-  /** Per-edge visibility 0..1 (fades toward paper). Length = poly.edges.length. */
+  /** Per-edge CSS colours; overrides `color`. Length = poly.edges.length. */
+  edgeColors?: string[];
+  /**
+   * Per-edge visibility 0..1. This mixes the stroke toward the paper colour
+   * (ink on paper), it is not true transparency: a 0 edge still paints paper
+   * over lines behind it.
+   */
   edgeOpacity?: number[];
   /** Applied to each vertex before rotation, e.g. to animate an extrusion. */
   pre?: (v: Vec, index: number) => Vec;
+  /**
+   * Change this whenever `pre`'s output changes. Without it, an object with
+   * `pre` recomputes every frame (correct, just more work).
+   */
+  preKey?: string | number;
   /** Translucent 2-faces. Defaults to depth ≥ 3. */
   faces?: boolean;
+  /** Per-face CSS colours for the translucent faces. Length = poly.faces.length. Default: ink. */
+  faceColors?: string[];
+  /** Draw vertices as round dots of this many pixels. Needed to show a 0-D point. */
+  vertexSize?: number;
   /** Uniform scale in world units. */
   scale?: number;
 }
@@ -40,18 +55,28 @@ export function NdObject({
   projection,
   color = 'axis',
   lineWidth = 2,
+  edgeColors,
   edgeOpacity,
   pre,
+  preKey,
   faces,
+  faceColors,
+  vertexSize,
   scale = 1,
 }: NdObjectProps) {
   const tokens = useTokens();
   const ink = useInkSegments(lineWidth);
+  const dots = useInkSegments(vertexSize ?? 1);
   const axes = useMemo(() => edgeAxes(poly), [poly]);
   const showFaces = faces ?? depth >= 3;
 
   const buffers = useMemo(
-    () => ({ pos: new Float32Array(poly.edges.length * 6), col: new Float32Array(poly.edges.length * 6) }),
+    () => ({
+      pos: new Float32Array(poly.edges.length * 6),
+      col: new Float32Array(poly.edges.length * 6),
+      dotPos: new Float32Array(poly.vertices.length * 6),
+      dotCol: new Float32Array(poly.vertices.length * 6),
+    }),
     [poly],
   );
 
@@ -59,7 +84,8 @@ export function NdObject({
     const tris = poly.faces.reduce((s, f) => s + Math.max(0, f.length - 2), 0);
     const g = new BufferGeometry();
     g.setAttribute('position', new BufferAttribute(new Float32Array(tris * 9), 3));
-    const m = new MeshBasicMaterial({ transparent: true, opacity: 0.035, side: DoubleSide, depthWrite: false });
+    g.setAttribute('color', new BufferAttribute(new Float32Array(tris * 9), 3));
+    const m = new MeshBasicMaterial({ transparent: true, opacity: 0.035, side: DoubleSide, depthWrite: false, vertexColors: true });
     const mesh = new Mesh(g, m);
     mesh.frustumCulled = false;
     mesh.renderOrder = -1;
@@ -77,7 +103,7 @@ export function NdObject({
     if (!tokens) return;
     // Several objects may share one rotation; it advances once per frame.
     rotation.tickAt(state.clock.elapsedTime, Math.min(dt, 0.05));
-    const key = `${rotation.version}|${depth}|${tokens.ink}|${edgeOpacity?.join(',')}|${projection?.mode}|${projection?.distance}|${scale}|${color}|${pre ? Math.random() : ''}`;
+    const key = `${rotation.version}|${depth}|${tokens.ink}|${edgeOpacity?.join(',')}|${projection?.mode}|${projection?.distance}|${scale}|${color}|${edgeColors?.join(',')}|${faceColors?.join(',')}|${vertexSize}|${pre ? (preKey ?? Math.random()) : ''}`;
     if (key === lastKey.current && poly === lastPoly.current) return;
     lastKey.current = key;
     lastPoly.current = poly;
@@ -106,7 +132,8 @@ export function NdObject({
       const pa = projected[a]!;
       const pb = projected[b]!;
       pos.set([pa[0]!, pa[1]!, pa[2]!, pb[0]!, pb[1]!, pb[2]!], e * 6);
-      const base = rgb(color === 'axis' ? axisColor(tokens, axes[e]!) : color === 'ink' ? tokens.ink : color);
+      const css = edgeColors?.[e] ?? (color === 'axis' ? axisColor(tokens, axes[e]!) : color === 'ink' ? tokens.ink : color);
+      const base = rgb(css);
       const op = edgeOpacity?.[e] ?? 1;
       for (let k = 0; k < 2; k++) {
         const f = (k === 0 ? fade[a]! : fade[b]!) * op;
@@ -117,21 +144,39 @@ export function NdObject({
     });
     ink.set(pos, col);
 
+    if (vertexSize) {
+      // A near-zero-length stroke with round caps is a dot.
+      const { dotPos, dotCol } = buffers;
+      const inkRgb = rgb(tokens.ink);
+      projected.forEach((p, i) => {
+        dotPos.set([p[0]!, p[1]!, p[2]!, p[0]! + 1e-4, p[1]!, p[2]!], i * 6);
+        const f = fade[i]!;
+        for (let k = 0; k < 2; k++)
+          for (let c = 0; c < 3; c++) dotCol[i * 6 + k * 3 + c] = paper[c]! + (inkRgb[c]! - paper[c]!) * f;
+      });
+      dots.set(dotPos, dotCol);
+    }
+
     if (showFaces) {
       const attr = faceMesh.geometry.getAttribute('position') as BufferAttribute;
       const arr = attr.array as Float32Array;
+      const cattr = faceMesh.geometry.getAttribute('color') as BufferAttribute;
+      const carr = cattr.array as Float32Array;
+      const inkRgb = rgb(tokens.ink);
       let o = 0;
-      for (const f of poly.faces) {
+      poly.faces.forEach((f, fi) => {
+        const c = faceColors?.[fi] ? rgb(faceColors[fi]!) : inkRgb;
         const p0 = projected[f[0]!]!;
         for (let k = 1; k < f.length - 1; k++) {
           const p1 = projected[f[k]!]!;
           const p2 = projected[f[k + 1]!]!;
           arr.set([p0[0]!, p0[1]!, p0[2]!, p1[0]!, p1[1]!, p1[2]!, p2[0]!, p2[1]!, p2[2]!], o);
+          carr.set([...c, ...c, ...c], o);
           o += 9;
         }
-      }
+      });
       attr.needsUpdate = true;
-      (faceMesh.material as MeshBasicMaterial).color.set(tokens.ink);
+      cattr.needsUpdate = true;
     }
   });
 
@@ -139,6 +184,7 @@ export function NdObject({
     <>
       {showFaces && <primitive object={faceMesh} />}
       <primitive object={ink.object} />
+      {vertexSize ? <primitive object={dots.object} /> : null}
     </>
   );
 }

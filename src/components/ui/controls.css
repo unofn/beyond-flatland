@@ -18,6 +18,15 @@
   flex: 1 1 12em;
 }
 
+.ctl-slider--bare {
+  grid-template-columns: auto 1fr;
+}
+
+/* Two or more sliders in a row keep usable tracks before wrapping. */
+.ctl-row > .ctl-slider {
+  flex-basis: 14em;
+}
+
 .ctl-slider__label {
   white-space: nowrap;
 }
@@ -103,4 +112,9 @@
 }
 .ctl-button:hover {
   border-color: var(--ink);
+}
+
+.ctl-plane {
+  font-style: italic;
+  white-space: nowrap;
 }

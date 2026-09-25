@@ -23,6 +23,9 @@ export function SectionView({ section, color, lineWidth = 2.2, fill = true, fill
   const tokens = useTokens();
   const stroke = color ?? tokens?.axis[3] ?? '#7b3f98';
 
+  if (import.meta.env.DEV && (section.points[0]?.length ?? 0) > 3)
+    console.warn('SectionView draws only the first three coordinates; project a 4D+ section to 3D first.');
+
   const pts3 = useMemo(
     () => section.points.map((p) => [(p[0] ?? 0) * scale, (p[1] ?? 0) * scale, (p[2] ?? 0) * scale] as const),
     [section, scale],

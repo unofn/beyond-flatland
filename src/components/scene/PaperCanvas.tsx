@@ -13,6 +13,8 @@ export interface PaperCanvasProps {
   extent?: number;
   /** Accessible description of what the figure shows. */
   label: string;
+  /** 'img' for a picture; 'application' when the canvas itself takes keyboard input. */
+  role?: 'img' | 'application';
   /** Pointer handlers / style from useNdRotation().bind, applied to the container. */
   bind?: React.HTMLAttributes<HTMLDivElement>;
 }
@@ -48,7 +50,7 @@ function FitPerspective({ extent }: { extent: number }) {
  * R3F canvas on transparent paper. Pauses rendering while scrolled out of
  * view so long chapters with many figures stay light on phones.
  */
-export function PaperCanvas({ children, depth, extent = 2.4, label, bind }: PaperCanvasProps) {
+export function PaperCanvas({ children, depth, extent = 2.4, label, role = 'img', bind }: PaperCanvasProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [onScreen, setOnScreen] = useState(false);
   useEffect(() => {
@@ -64,7 +66,7 @@ export function PaperCanvas({ children, depth, extent = 2.4, label, bind }: Pape
   return (
     <div
       ref={ref}
-      role="img"
+      role={role}
       aria-label={label}
       {...bind}
       style={{ position: 'absolute', inset: 0, ...(bind?.style ?? {}) }}
