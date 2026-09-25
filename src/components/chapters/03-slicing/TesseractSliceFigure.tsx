@@ -112,7 +112,7 @@ export default function TesseractSliceFigure({ locale, scrolly }: { locale: Loca
       label={str.tesseractLabel}
       controls={
         <>
-          <span className="s03-first">
+          <div className="s03-first">
             <span aria-hidden="true">{str.first}</span>
             <Segmented
               label={str.firstGroup}
@@ -125,7 +125,7 @@ export default function TesseractSliceFigure({ locale, scrolly }: { locale: Loca
               ]}
               onChange={setO}
             />
-          </span>
+          </div>
           <Slider
             label={<span className="axis-3">w</span>}
             axis={3}

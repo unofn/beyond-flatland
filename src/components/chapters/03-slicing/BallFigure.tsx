@@ -15,6 +15,8 @@ export default function BallFigure({ locale }: { locale: Locale }) {
   const [w, setW] = useState(-0.6);
   const [playing, setPlaying] = useState(false);
   const phase = useRef(0);
+  const wRef = useRef(w);
+  wRef.current = w;
 
   useEffect(() => {
     if (!playing) return;
@@ -36,6 +38,7 @@ export default function BallFigure({ locale }: { locale: Locale }) {
       const cx = width / 2;
       const cy = height / 2;
       const unit = Math.min(width, height) * 0.38;
+      const w = wRef.current;
       const r = Math.sqrt(Math.max(0, 1 - w * w)) * unit;
       if (r < 0.5) return;
       const violet = tokens.axis[3];
@@ -75,7 +78,8 @@ export default function BallFigure({ locale }: { locale: Locale }) {
       ctx.arc(cx, cy, r, 0, Math.PI * 2);
       ctx.stroke();
     },
-    [w],
+    // Stable while playing (Canvas2D animates and reads wRef); follows the slider otherwise.
+    [playing ? -1 : w], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   return (
@@ -98,7 +102,7 @@ export default function BallFigure({ locale }: { locale: Locale }) {
         </>
       }
     >
-      <Canvas2D draw={draw} label={str.ballLabel} />
+      <Canvas2D draw={draw} animate={playing} label={str.ballLabel} />
     </FigureShell>
   );
 }
