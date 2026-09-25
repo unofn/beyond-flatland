@@ -159,6 +159,7 @@ export default function ExtrusionFigure({
     if (step >= 2) xw = manualXw ?? ramp(progress, 0.05, 0.6) * (Math.PI / 2);
   }
 
+  const showTurn = stage === 'beyond' && step >= 2;
   const sweep = useMemo(() => sweepUpTo(axis, t), [axis, t]);
   const dim = sweptDim(sweep);
   const finished = t > 0.999 ? axis + 1 : axis;
@@ -194,36 +195,42 @@ export default function ExtrusionFigure({
       label={str.label}
       controls={
         <>
-          <Slider
-            label={axisLabel(axis)}
-            axis={axis}
-            value={t}
-            min={0}
-            max={1}
-            onChange={setManualT}
-            format={(v) => `${Math.round(v * 100)}%`}
-          />
-          {stage === 'beyond' && step >= 2 && (
+          <div className={['ext-ctl', showTurn && 'ext-ctl--row'].filter(Boolean).join(' ')}>
             <Slider
-              label={str.turn}
-              axis={3}
-              value={xw}
-              min={-Math.PI}
-              max={Math.PI}
-              onChange={setManualXw}
-              format={(v) => `${Math.round((v * 180) / Math.PI)}°`}
+              label={axisLabel(axis)}
+              axis={axis}
+              value={t}
+              min={0}
+              max={1}
+              onChange={setManualT}
+              format={(v) => `${Math.round(v * 100)}%`}
             />
+          </div>
+          {showTurn && (
+            <div className="ext-ctl">
+              <Slider
+                label={str.turn}
+                axis={3}
+                value={xw}
+                min={-Math.PI}
+                max={Math.PI}
+                onChange={setManualXw}
+                format={(v) => `${Math.round((v * 180) / Math.PI)}°`}
+              />
+            </div>
           )}
           <Button onClick={() => rot.reset()}>{str.reset}</Button>
         </>
       }
     >
-      <PaperCanvas depth={1} extent={2.4} label={label} bind={bind}>
-        <SweepScene sweep={sweep} xw={xw} tilt={tilt} rot={rot} />
-      </PaperCanvas>
       <p className="ext-tally" aria-hidden="true">
         {tally}
       </p>
+      <div className="ext-stage">
+        <PaperCanvas depth={1} extent={2.1} label={label} bind={bind}>
+          <SweepScene sweep={sweep} xw={xw} tilt={tilt} rot={rot} />
+        </PaperCanvas>
+      </div>
     </FigureShell>
   );
 }

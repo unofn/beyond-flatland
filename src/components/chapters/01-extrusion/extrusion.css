@@ -4,6 +4,7 @@
   position: absolute;
   left: var(--space-2);
   top: var(--space-1);
+  right: var(--space-2);
   margin: 0;
   font-size: var(--step--1);
   line-height: 1.4;
@@ -13,9 +14,20 @@
   text-align: left;
 }
 
+/* The drawing sits below the tally line so the two never overlap. */
+.ext-stage {
+  position: absolute;
+  inset: calc(var(--step--1) * 1.4 + var(--space-1) * 2) 0 0 0;
+}
+
 /* ---- Count table ---- */
 
+.ext-count__scroll {
+  overflow-x: auto;
+}
+
 .ext-count {
+  max-width: var(--measure);
   margin: var(--space-3) 0 var(--space-4);
 }
 
@@ -132,4 +144,40 @@
 
 .ext-count__feedback p {
   margin: 0 0 var(--space-2);
+}
+
+/* Slider wrappers: keep tracks usable when two sliders share the row. */
+.ext-ctl {
+  display: flex;
+  flex: 1 1 14em;
+  min-width: 0;
+}
+.ext-ctl > * {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.ext-ctl--row {
+  flex-basis: 100%;
+}
+
+@media (max-width: 480px) {
+  .ext-count table {
+    font-size: 0.84em;
+  }
+  .ext-count th,
+  .ext-count td {
+    padding: 0.4em 0.18em;
+  }
+  .ext-count td {
+    min-width: 0;
+  }
+  .ext-count input {
+    width: 2.6em;
+  }
+  .ext-count__note {
+    white-space: normal;
+  }
+  .ext-count__dim {
+    width: 0.9em;
+  }
 }

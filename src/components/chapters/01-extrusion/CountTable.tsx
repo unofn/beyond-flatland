@@ -121,76 +121,78 @@ export default function CountTable({ locale, scrolly }: { locale: Locale; scroll
 
   return (
     <div className="ext-count">
-      <table>
-        <caption>{str.caption}</caption>
-        <thead>
-          <tr>
-            <th scope="col">{str.colShape}</th>
-            {cols.map((c) => (
-              <th scope="col" key={c}>
-                {c}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {[0, 1, 2, 3].map((d) => {
-            const filled = d <= built || passed;
-            const c = counts(d);
-            return (
-              <tr key={d}>
-                {rowHead(d)}
-                {c.map((n, k) => (
-                  <td key={k}>
-                    {filled ? (
-                      n
-                    ) : (
-                      <span className="ext-count__empty">
-                        <span aria-hidden="true">·</span>
-                        <span className="visually-hidden">{str.notYet}</span>
-                      </span>
-                    )}
-                  </td>
-                ))}
-              </tr>
-            );
-          })}
-          <tr className="ext-count__predict">
-            {rowHead(4)}
-            {answer.map((n, k) => {
-              const g = guesses[k]!.trim();
+      <div className="ext-count__scroll">
+        <table>
+          <caption>{str.caption}</caption>
+          <thead>
+            <tr>
+              <th scope="col">{str.colShape}</th>
+              {cols.map((c) => (
+                <th scope="col" key={c}>
+                  {c}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {[0, 1, 2, 3].map((d) => {
+              const filled = d <= built || passed;
+              const c = counts(d);
               return (
-                <td key={k}>
-                  {revealed ? (
-                    <>
-                      <span className="ext-count__answer">{n}</span>
-                      <span className="ext-count__note">{rule(k)}</span>
-                      {g !== '' && (
-                        <span className="ext-count__note">{Number(g) === n ? str.right : fill(str.yourGuess, { n: g })}</span>
+                <tr key={d}>
+                  {rowHead(d)}
+                  {c.map((n, k) => (
+                    <td key={k}>
+                      {filled ? (
+                        n
+                      ) : (
+                        <span className="ext-count__empty">
+                          <span aria-hidden="true">·</span>
+                          <span className="visually-hidden">{str.notYet}</span>
+                        </span>
                       )}
-                    </>
-                  ) : (
-                    <input
-                      type="number"
-                      inputMode="numeric"
-                      min={0}
-                      step={1}
-                      placeholder="?"
-                      aria-label={fill(str.guess, { what: cols[k]!.toLowerCase() })}
-                      value={guesses[k]}
-                      onChange={(e) => {
-                        const next = guesses.slice();
-                        next[k] = e.currentTarget.value;
-                        setGuesses(next);
-                      }}
-                    />
-                  )}
-                </td>
+                    </td>
+                  ))}
+                </tr>
               );
             })}
-          </tr>
-        </tbody>
-      </table>
+            <tr className="ext-count__predict">
+              {rowHead(4)}
+              {answer.map((n, k) => {
+                const g = guesses[k]!.trim();
+                return (
+                  <td key={k}>
+                    {revealed ? (
+                      <>
+                        <span className="ext-count__answer">{n}</span>
+                        <span className="ext-count__note">{rule(k)}</span>
+                        {g !== '' && (
+                          <span className="ext-count__note">{Number(g) === n ? str.right : fill(str.yourGuess, { n: g })}</span>
+                        )}
+                      </>
+                    ) : (
+                      <input
+                        type="number"
+                        inputMode="numeric"
+                        min={0}
+                        step={1}
+                        placeholder="?"
+                        aria-label={fill(str.guess, { what: cols[k]!.toLowerCase() })}
+                        value={guesses[k]}
+                        onChange={(e) => {
+                          const next = guesses.slice();
+                          next[k] = e.currentTarget.value;
+                          setGuesses(next);
+                        }}
+                      />
+                    )}
+                  </td>
+                );
+              })}
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       {!revealed && (
         <div className="ext-count__actions">
