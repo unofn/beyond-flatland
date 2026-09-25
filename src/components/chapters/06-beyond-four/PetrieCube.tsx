@@ -269,7 +269,7 @@ export default function PetrieCube({ locale, scrolly }: { locale: Locale; scroll
             format={(x) => `${x}`}
             valueText={(x) => str.dimValue.replace('{n}', String(x))}
           />
-          <Button onClick={() => setPlaying(!playing)} aria-pressed={playing} disabled={n < 2}>
+          <Button onClick={() => setPlaying(!playing)} disabled={n < 2}>
             {playing ? str.pause : str.spin}
           </Button>
         </>
