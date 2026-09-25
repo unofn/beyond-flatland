@@ -164,10 +164,12 @@ export default function ExtrusionFigure({
   const dim = sweptDim(sweep);
   const finished = t > 0.999 ? axis + 1 : axis;
 
+  // The second figure starts as a finished cube; it must not fill the table's
+  // earlier rows on the reader's behalf. It only counts once the tesseract is done.
   useEffect(() => {
-    markBuilt(finished);
+    if (stage === 'build' || finished >= 4) markBuilt(finished);
     if (finished >= 4) tesseractRevealed.set(true);
-  }, [finished]);
+  }, [finished, stage]);
 
   const c = counts(dim);
   const tallyParts = (
