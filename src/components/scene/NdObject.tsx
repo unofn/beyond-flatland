@@ -71,13 +71,16 @@ export function NdObject({
   }, [faceMesh]);
 
   const lastKey = useRef('');
+  const lastPoly = useRef<Polytope | null>(null);
 
-  useFrame((_, dt) => {
+  useFrame((state, dt) => {
     if (!tokens) return;
-    rotation.tick(Math.min(dt, 0.05));
+    // Several objects may share one rotation; it advances once per frame.
+    rotation.tickAt(state.clock.elapsedTime, Math.min(dt, 0.05));
     const key = `${rotation.version}|${depth}|${tokens.ink}|${edgeOpacity?.join(',')}|${projection?.mode}|${projection?.distance}|${scale}|${color}|${pre ? Math.random() : ''}`;
-    if (key === lastKey.current) return;
+    if (key === lastKey.current && poly === lastPoly.current) return;
     lastKey.current = key;
+    lastPoly.current = poly;
 
     const n = poly.dim;
     const m = rotation.matrix();
