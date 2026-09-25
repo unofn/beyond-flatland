@@ -48,6 +48,9 @@ export function useInkSegments(width = 1.6, dashed = false) {
         if (count !== lastCount) {
           geometry.setPositions(positions as number[]);
           geometry.setColors(colors as number[]);
+          // three.js caches the instance count on first bind and never
+          // recomputes it; without this, a segment list that grows is clipped.
+          delete (geometry as unknown as { _maxInstanceCount?: number })._maxInstanceCount;
           lastCount = count;
         } else {
           // Reuse existing buffers: faster than setPositions each frame.
