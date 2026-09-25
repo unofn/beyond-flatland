@@ -12,7 +12,7 @@ export const coverStrings = defineStrings({
     contents: '目录',
     empty: '章节还在写作中，先去实验室看看吧。',
     colophonHead: '版本说明',
-    colophon1: '本书的设想来自埃德温·A·艾勃特的《平面国：一个多维的传奇》（1884），用色取自奥利弗·伯恩的《欧几里得几何原本前六卷》（1847）。',
+    colophon1: '本书的设想来自埃德温·A·阿博特的《平面国：一个多维的传奇》（1884），用色取自奥利弗·伯恩的《欧几里得几何原本前六卷》（1847）。',
     colophon2: '全书以中文和英文各写一遍，两个版本各自成文。',
     otherEdition: '阅读英文版',
     colophon3: '正文字体为 Libre Caslon 与思源宋体。',
