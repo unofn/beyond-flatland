@@ -7,6 +7,7 @@
  *   pnpm shots --pages /zh/slicing/    # only matching paths (substring, comma-separated)
  *   pnpm shots --devices phone --schemes light
  *   pnpm shots --paths /zh/kit/        # exact paths, skipping discovery (e.g. dev-only drafts)
+ *   pnpm shots --wait 5000             # let intro animations finish before the first frame
  *   pnpm shots --full                  # one full-page image instead of per-viewport frames
  *
  * Builds nothing and starts nothing: serve the site first (`pnpm build && pnpm preview`
@@ -40,6 +41,7 @@ const pageFilter = list(arg('pages'));
 const full = flag('full');
 const maxFrames = Number(arg('frames') ?? 12);
 const out = arg('out') ?? 'shots';
+const wait = Number(arg('wait') ?? 600); // ms after load, e.g. to let an intro animation finish
 
 /** Page paths from the built site (every index.html under dist), else a fallback list. */
 async function discoverPages(): Promise<string[]> {
@@ -88,9 +90,15 @@ for (const deviceName of deviceNames) {
       const errors: string[] = [];
       page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
       page.on('pageerror', (e) => errors.push(String(e)));
-      await page.goto(base + path, { waitUntil: 'networkidle' });
+      // The dev server compiles on first hit; retry once, and don't let a busy
+      // network (HMR socket, fonts) block the shot forever.
+      try {
+        await page.goto(base + path, { waitUntil: 'networkidle', timeout: 45_000 });
+      } catch {
+        await page.goto(base + path, { waitUntil: 'load', timeout: 60_000 });
+      }
       await page.evaluate(() => document.fonts.ready);
-      await page.waitForTimeout(600);
+      await page.waitForTimeout(wait);
 
       const dir = join(out, `${deviceName}-${scheme}`, path.replace(/^\/|\/$/g, '').replace(/\//g, '_') || 'root');
       await mkdir(dir, { recursive: true });
