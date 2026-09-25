@@ -54,7 +54,7 @@ export default function Cell24Figure({ locale }: { locale: Locale }) {
             min={lo}
             max={hi}
             onChange={(v) => setT((v - lo) / (hi - lo))}
-            format={(v) => v.toFixed(2)}
+            format={(v) => (Math.abs(v) < 0.005 ? 0 : v).toFixed(2)}
           />
           <Button onClick={() => rot.reset()}>{str.reset}</Button>
         </>

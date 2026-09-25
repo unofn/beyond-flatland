@@ -26,10 +26,9 @@ const CUBE_NORMALS: Vec[] = NORMALS.map((n) => (n.slice(1).some((x) => x) ? n.sl
 /** Empty margin beyond each end of the range, as a fraction of it. */
 const MARGIN = 0.08;
 
-const ease = (x: number) => x * x * (3 - 2 * x);
 const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
 /** Step progress → position t, with a short hold at each end of the step. */
-const sweep = (p: number, from: number, to: number) => from + (to - from) * ease(clamp01((p - 0.04) / 0.82));
+const sweep = (p: number, from: number, to: number) => from + (to - from) * clamp01((p - 0.02) / 0.88);
 
 /**
  * What each scrolly step does: which orientation it shows and how its
@@ -133,7 +132,7 @@ export default function TesseractSliceFigure({ locale, scrolly }: { locale: Loca
             min={lo - MARGIN * range}
             max={hi + MARGIN * range}
             onChange={(v) => setT((v - lo) / range)}
-            format={(v) => (t < 0 || t > 1 ? str.empty : v.toFixed(2))}
+            format={(v) => (t < 0 || t > 1 ? str.empty : (Math.abs(v) < 0.005 ? 0 : v).toFixed(2))}
           />
           <Button onClick={() => rot.reset()}>{str.reset}</Button>
         </>
