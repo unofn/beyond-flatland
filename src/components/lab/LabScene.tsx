@@ -82,7 +82,7 @@ export function LabScene({ config, rot, onEmpty }: { config: SceneConfig; rot: N
   const fillMesh = useMemo(() => {
     const m = new Mesh(
       new BufferGeometry(),
-      new MeshBasicMaterial({ transparent: true, opacity: 0.18, side: DoubleSide, depthWrite: false }),
+      new MeshBasicMaterial({ transparent: true, opacity: 0.12, side: DoubleSide, depthWrite: false }),
     );
     m.frustumCulled = false;
     m.renderOrder = -1;
@@ -226,7 +226,9 @@ export function LabScene({ config, rot, onEmpty }: { config: SceneConfig; rot: N
     cut.object.visible = true;
 
     fillMesh.visible = false;
-    if (showFill && coords.length >= 3) {
+    // Fill only a section that is honestly 2- or 3-dimensional; the hull of a
+    // projected 4- or 5-D section would hide its inner structure.
+    if (showFill && coords.length >= 3 && basis.length <= 3) {
       const span = affineSpan(coords);
       let geometry: BufferGeometry | null = null;
       if (span.length === 2) {
