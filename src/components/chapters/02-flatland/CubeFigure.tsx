@@ -192,20 +192,19 @@ export default function CubeFigure({ locale }: { locale: Locale }) {
         ctx.stroke();
       };
 
+      // Opaque plane, then the hidden edges beneath it dashed on top.
+      pathPoly(ctx, corners, (p) => P(p[0], p[1], 0));
+      ctx.fillStyle = tokens.paperShade;
+      ctx.fill();
+      ctx.strokeStyle = tokens.inkSoft;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
       ctx.strokeStyle = tokens.inkFaint;
       ctx.lineWidth = 1;
       ctx.setLineDash([3, 3]);
       strokeEdges('below');
       ctx.setLineDash([]);
-
-      pathPoly(ctx, corners, (p) => P(p[0], p[1], 0));
-      ctx.globalAlpha = 0.82;
-      ctx.fillStyle = tokens.paperShade;
-      ctx.fill();
-      ctx.globalAlpha = 1;
-      ctx.strokeStyle = tokens.inkSoft;
-      ctx.lineWidth = 1;
-      ctx.stroke();
 
       const poly = section ? (sortConvex(section.points) as unknown as V2[]) : [];
       const dot2 = (x: number, y: number) => {

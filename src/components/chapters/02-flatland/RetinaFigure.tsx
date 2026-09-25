@@ -62,6 +62,7 @@ export default function RetinaFigure({ locale }: { locale: Locale }) {
   // Screen ↔ world mapping of the last frame, for pointer input.
   const frame = useRef({ ox: 0, oy: 0, scale: 1 });
   const dragging = useRef(false);
+  const press = useRef<{ x: number; y: number } | null>(null);
 
   /** Walk towards `target` and stop just before bumping into anything. */
   const walk = useCallback(
@@ -97,18 +98,28 @@ export default function RetinaFigure({ locale }: { locale: Locale }) {
   const bind = {
     tabIndex: 0,
     style: { touchAction: 'pan-y', cursor: 'pointer' } as const,
+    // Nothing moves on pointerdown: on touch, a vertical swipe that starts
+    // here must scroll the page (touch-action: pan-y fires pointercancel).
     onPointerDown: (e: PointerEvent<HTMLDivElement>) => {
-      dragging.current = true;
-      e.currentTarget.setPointerCapture(e.pointerId);
-      walk(toWorld(e));
+      press.current = { x: e.clientX, y: e.clientY };
+      dragging.current = false;
     },
     onPointerMove: (e: PointerEvent<HTMLDivElement>) => {
+      const p = press.current;
+      if (!p) return;
+      if (!dragging.current && Math.hypot(e.clientX - p.x, e.clientY - p.y) > 4) {
+        dragging.current = true;
+        e.currentTarget.setPointerCapture(e.pointerId);
+      }
       if (dragging.current) walk(toWorld(e));
     },
-    onPointerUp: () => {
+    onPointerUp: (e: PointerEvent<HTMLDivElement>) => {
+      if (press.current && !dragging.current) walk(toWorld(e));
+      press.current = null;
       dragging.current = false;
     },
     onPointerCancel: () => {
+      press.current = null;
       dragging.current = false;
     },
     onKeyDown: (e: KeyboardEvent<HTMLDivElement>) => {

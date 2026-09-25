@@ -76,7 +76,16 @@ function drawSpace(ctx: CanvasRenderingContext2D, b: Box, h: number, tokens: Tok
   const [cx, cy] = P(0, 0, h);
   const rho = sectionRadius(R, h);
 
-  // The part of the sphere below the plane: faint, dashed.
+  // The plane, opaque.
+  pathPoly(ctx, corners, (p) => P(p[0], p[1], 0));
+  ctx.fillStyle = tokens.paperShade;
+  ctx.fill();
+  ctx.strokeStyle = tokens.inkSoft;
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // The sphere's hidden outline, dashed on top (the draughtsman's
+  // convention); the visible cap drawn below paints over its upper part.
   ctx.strokeStyle = tokens.inkFaint;
   ctx.lineWidth = 1;
   ctx.setLineDash([3, 3]);
@@ -84,16 +93,6 @@ function drawSpace(ctx: CanvasRenderingContext2D, b: Box, h: number, tokens: Tok
   ctx.arc(cx, cy, R * scale, 0, Math.PI * 2);
   ctx.stroke();
   ctx.setLineDash([]);
-
-  // The plane, opaque enough to hide what is under it.
-  pathPoly(ctx, corners, (p) => P(p[0], p[1], 0));
-  ctx.globalAlpha = 0.82;
-  ctx.fillStyle = tokens.paperShade;
-  ctx.fill();
-  ctx.globalAlpha = 1;
-  ctx.strokeStyle = tokens.inkSoft;
-  ctx.lineWidth = 1;
-  ctx.stroke();
 
   // A Square lying in the plane.
   const { pts } = squareBody(SQUARE_AT, SQUARE_R, Math.PI);
