@@ -1,11 +1,15 @@
 ---
 /**
- * Cover and contents. Owned by the cover agent; this is the functional
- * baseline it replaces.
+ * Cover and contents: A Square's Flatland seen edge-on, then from above; the
+ * title page; the contents (driven only by the chapter collection); colophon.
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { LOCALES, type Locale } from '../../i18n/locales';
-import { paths } from '../../i18n/paths';
+import LanguageSwitch from '../../components/site/LanguageSwitch.astro';
+import FlatlandHero from '../../components/cover/FlatlandHero';
+import ChapterGlyph from '../../components/cover/ChapterGlyph.astro';
+import { coverStrings } from '../../components/cover/strings';
+import { LOCALES, LOCALE_TAGS, type Locale } from '../../i18n/locales';
+import { paths, switchLocalePath } from '../../i18n/paths';
 import { t } from '../../i18n/ui';
 import { getChapters, parseChapterId } from '../../lib/content/chapters';
 
@@ -13,32 +17,318 @@ export function getStaticPaths() {
   return LOCALES.map((locale) => ({ params: { locale }, props: { locale } }));
 }
 const { locale } = Astro.props as { locale: Locale };
-const chapters = await getChapters(locale);
+const s = coverStrings[locale];
+const other = LOCALES.find((l) => l !== locale) ?? locale;
+const chapters = (await getChapters(locale)).map((c) => ({
+  ...c.data,
+  slug: parseChapterId(c.id).slug,
+}));
+const first = chapters[0];
+/** "*Title*" → <cite>Title</cite> (our own strings only). */
+const cite = (text: string) => text.replace(/\*([^*]+)\*/g, '<cite>$1</cite>');
 ---
 
-<BaseLayout locale={locale} title={t(locale, 'siteTitle')} description={t(locale, 'siteSubtitle')}>
-  <div class="contents">
-    <h1>{t(locale, 'siteTitle')}</h1>
-    <p>{t(locale, 'siteSubtitle')}</p>
-    <h2>{t(locale, 'contents')}</h2>
-    <ol>
+<BaseLayout locale={locale} title={t(locale, 'siteTitle')} description={s.description} bare>
+  <div class="cover">
+    <header class="cover__head">
+      <LanguageSwitch locale={locale} />
+    </header>
+
+    <section class="cover__hero">
+      <div class="cover__fallback" aria-hidden="true"></div>
+      <FlatlandHero client:only="react" locale={locale} />
+    </section>
+
+    <section class="cover__title" aria-labelledby="cover-title">
+      <h1 id="cover-title">{t(locale, 'siteTitle')}</h1>
+      <p class="cover__other-title" lang={LOCALE_TAGS[other]}>{s.otherTitle}</p>
+      <div class="cover__invite">
+        <p>{s.invite1}{locale === 'en' ? ' ' : ''}{s.invite2}</p>
+        <p>{s.invite3}</p>
+      </div>
+      {first && <a class="cover__begin" href={paths.chapter(locale, first.slug)}>{s.begin}</a>}
+    </section>
+
+    <section class="toc" aria-labelledby="toc-title">
+      <h2 id="toc-title">{s.contents}</h2>
       {
-        chapters.map((c) => (
-          <li>
-            <a href={paths.chapter(locale, parseChapterId(c.id).slug)}>{c.data.title}</a>
-            <p>{c.data.summary}</p>
-          </li>
-        ))
+        chapters.length > 0 ? (
+          <ol class="toc__list">
+            {chapters.map((c) => (
+              <li class="toc__item">
+                <span class="toc__num" aria-hidden="true">
+                  {c.order}
+                </span>
+                <span class="toc__glyph">
+                  <ChapterGlyph slug={c.slug} />
+                </span>
+                <div class="toc__text">
+                  <a class="toc__link" href={paths.chapter(locale, c.slug)}>
+                    <span class="visually-hidden">{t(locale, 'chapter', { n: c.order })}: </span>
+                    {c.title}
+                  </a>
+                  <p class="toc__summary">{c.summary}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <p class="toc__empty">{s.empty}</p>
+        )
       }
-      <li><a href={paths.lab(locale)}>{t(locale, 'lab')}</a></li>
-    </ol>
+      <div class="toc__item toc__item--lab">
+        <span class="toc__num" aria-hidden="true"></span>
+        <span class="toc__glyph">
+          <ChapterGlyph slug="lab" />
+        </span>
+        <div class="toc__text">
+          <a class="toc__link" href={paths.lab(locale)}>{t(locale, 'lab')}</a>
+          <p class="toc__summary">{t(locale, 'labBlurb')}</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="colophon">
+      <svg class="colophon__mark" viewBox="0 0 20 20" aria-hidden="true"><rect x="4" y="4" width="12" height="12"></rect></svg>
+      <h2 class="visually-hidden">{s.colophonHead}</h2>
+      <p set:html={cite(s.colophon1)} />
+      <p>
+        {s.colophon2}{locale === 'en' ? ' ' : ''}<a href={switchLocalePath(Astro.url.pathname, other)} hreflang={LOCALE_TAGS[other]}>{s.otherEdition}</a>{locale === 'zh' ? '。' : '.'}
+      </p>
+      <p>{s.colophon3}</p>
+    </footer>
   </div>
 </BaseLayout>
 
-<style>
-  .contents {
-    max-width: var(--measure);
+<style is:global>
+  /* Global because the hero island's markup is rendered by React. */
+  .cover {
+    --hero-h: clamp(250px, 64vw, 580px);
+    padding-bottom: max(var(--space-4), env(safe-area-inset-bottom));
+  }
+  @media (min-width: 720px) {
+    .cover {
+      --hero-h: clamp(340px, min(48vw, 58vh), 560px);
+    }
+  }
+
+  .cover__head {
+    display: flex;
+    justify-content: flex-end;
+    padding: var(--space-2) var(--gutter);
+    padding-top: max(var(--space-2), env(safe-area-inset-top));
+  }
+
+  /* Hero: full-bleed, no frame; the page itself is the plane. */
+  .cover__hero {
+    position: relative;
+    min-height: calc(var(--hero-h) + 5.5rem);
+  }
+  .cover__fallback {
+    position: absolute;
+    inset: 0 0 auto;
+    height: var(--hero-h);
+  }
+  .cover__fallback::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    border-top: 1px solid var(--ink-soft);
+  }
+  .cover__hero:has(.hero) .cover__fallback {
+    display: none;
+  }
+  .hero__art {
+    position: relative;
+    height: var(--hero-h);
+  }
+  .hero__below {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2) var(--space-4);
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: var(--space-2) var(--gutter) 0;
+  }
+  .hero__caption {
+    flex: 1 1 18em;
+    margin: 0;
+    min-height: 3em;
+    font-size: var(--step--1);
+    line-height: 1.5;
+    font-style: italic;
+    color: var(--ink-soft);
+  }
+  :lang(zh) .hero__caption {
+    font-style: normal;
+    text-align: left;
+  }
+  .hero__control {
+    flex: 0 1 20em;
+    min-width: min(100%, 16em);
+  }
+
+  /* Title page */
+  .cover__title {
+    max-width: 40em;
     margin: 0 auto;
     padding: var(--space-4) var(--gutter);
+    text-align: center;
+  }
+  .cover__title h1 {
+    font-size: clamp(3rem, 9vw, 6.5rem);
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+  }
+  :lang(zh) .cover__title h1 {
+    letter-spacing: 0.12em;
+    margin-right: -0.12em; /* keep the tracked title optically centred */
+  }
+  .cover__other-title {
+    margin: var(--space-2) 0 0;
+    font-size: var(--step-1);
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+  .cover__other-title:lang(zh) {
+    font-family: var(--font-cjk);
+    font-style: normal;
+    letter-spacing: 0.12em;
+  }
+  .cover__invite {
+    max-width: 29em;
+    margin: var(--space-4) auto 0;
+    font-size: var(--step-1);
+  }
+  :lang(zh) .cover__invite {
+    font-size: var(--step-0);
+    max-width: 26em;
+  }
+  .cover__invite p {
+    text-align: center;
+    hanging-punctuation: none;
+  }
+  .cover__begin {
+    display: inline-block;
+    margin-top: var(--space-2);
+    padding: 0.5em 1.4em;
+    min-height: 44px;
+    border: 1px solid var(--ink);
+    border-radius: var(--radius-control);
+    text-decoration: none;
+    font-size: var(--step-0);
+  }
+  .cover__begin:hover {
+    border-color: var(--accent);
+  }
+
+  /* Contents */
+  .toc {
+    max-width: 40em;
+    margin: 0 auto;
+    padding: var(--space-4) var(--gutter);
+  }
+  .toc h2 {
+    font-size: var(--step-3);
+    text-align: center;
+    margin-bottom: var(--space-4);
+  }
+  .toc__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .toc__item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.6em 3.25rem 1fr;
+    gap: 0 var(--space-3);
+    align-items: start;
+    padding: var(--space-2) 0;
+  }
+  .toc__num {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    line-height: 1.1;
+    color: var(--ink-soft);
+    text-align: right;
+    font-variant-numeric: oldstyle-nums;
+  }
+  .toc__glyph {
+    display: block;
+    width: 3.25rem;
+    padding-top: 0.15em;
+  }
+  .toc__text {
+    min-width: 0;
+  }
+  .toc__link {
+    font-size: var(--step-1);
+    line-height: 1.3;
+    text-decoration: none;
+  }
+  /* The whole row is the link's target. */
+  .toc__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .toc__item:hover .toc__link {
+    color: var(--accent);
+  }
+  .toc__summary {
+    margin: 0.25em 0 0;
+    font-size: var(--step--1);
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+  :lang(zh) .toc__summary {
+    line-height: 1.75;
+    text-align: left;
+  }
+  .toc__item--lab {
+    margin-top: var(--space-3);
+    padding-top: var(--space-3);
+    border-top: var(--rule);
+  }
+  .toc__empty {
+    text-align: center;
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+  :lang(zh) .toc__empty {
+    font-style: normal;
+  }
+
+  /* Colophon */
+  .colophon {
+    max-width: 30em;
+    margin: var(--space-4) auto 0;
+    padding: 0 var(--gutter);
+    font-size: var(--step--1);
+    line-height: 1.6;
+    color: var(--ink-soft);
+    text-align: center;
+  }
+  .colophon p {
+    margin-bottom: var(--space-2);
+    text-align: center;
+    hanging-punctuation: none;
+  }
+  .colophon cite {
+    font-style: italic;
+  }
+  .colophon__mark {
+    display: block;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin: 0 auto var(--space-3);
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 1.5;
   }
 </style>
