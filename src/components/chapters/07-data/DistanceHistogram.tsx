@@ -10,6 +10,7 @@ import { defineStrings } from '../../../i18n/ui';
 import type { Locale } from '../../../i18n/locales';
 import { canvasFont } from './draw';
 import { cubeDistances } from './synthetic';
+import { Tip } from './Tip';
 import './data.css';
 
 const DIMS = [1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 30, 50, 75, 100, 150, 200, 300, 500, 750, 1000];
@@ -141,14 +142,13 @@ export default function DistanceHistogram({ locale }: { locale: Locale }) {
   if (hover !== null && bins[hover]) {
     const { left, right, base } = geom.current;
     const bw = (right - left) / BINS;
-    const w = wrap.current?.clientWidth ?? 0;
     const x = left + (hover + 0.5) * bw;
     const a = ((hover * X_MAX) / BINS).toFixed(2);
     const b = (((hover + 1) * X_MAX) / BINS).toFixed(2);
     tip = (
-      <div className="d7-overlay d7-tip" style={{ left: Math.min(Math.max(x, 100), Math.max(w - 100, 100)), top: base - 30 }}>
+      <Tip x={x} y={base - 30} width={wrap.current?.clientWidth ?? 0}>
         {str.tip.replace('{a}', a).replace('{b}', b).replace('{c}', String(bins[hover]))}
-      </div>
+      </Tip>
     );
   }
 

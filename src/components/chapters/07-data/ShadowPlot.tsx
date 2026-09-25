@@ -9,6 +9,7 @@ import { dot, type Vec } from '../../../lib/nd';
 import { Canvas2D, axisColor, useReducedMotion, type Draw2DContext } from '../../scene';
 import { alignSigns, canvasFont, drawMarker, easePlane, markerPath, type MarkerKind } from './draw';
 import { keptVariance } from './pca';
+import { Tip } from './Tip';
 import './data.css';
 
 export interface ShadowPlotProps {
@@ -63,6 +64,8 @@ export function ShadowPlot({ points, kinds, target, freeSigns, cov, extent, axes
       const cy = height / 2;
       const s = Math.min(width, height) / 2 / extent;
       const [h, v] = cur as [Vec, Vec];
+      // Marks grow a little on large plates, never below 8px across.
+      const r = Math.min(Math.max(Math.min(width, height) / 140, 4.2), 5.5);
 
       // Shadows of the coordinate axes: ch. 4's tesseract axes, now measurements.
       if (axes) {
@@ -85,7 +88,7 @@ export function ShadowPlot({ points, kinds, target, freeSigns, cov, extent, axes
         const y = cy - dot(p, v) * s;
         xy[i * 2] = x;
         xy[i * 2 + 1] = y;
-        drawMarker(ctx, tokens, kinds[i]!, x, y);
+        drawMarker(ctx, tokens, kinds[i]!, x, y, r);
       }
 
       // Axis labels on top, just past each tip, kept inside the plate.
@@ -164,19 +167,10 @@ export function ShadowPlot({ points, kinds, target, freeSigns, cov, extent, axes
   if (hover !== null) {
     const x = screen.current[hover * 2]!;
     const y = screen.current[hover * 2 + 1]!;
-    const w = wrap.current?.clientWidth ?? 0;
-    const below = y < 70;
     tip = (
-      <div
-        className="d7-overlay d7-tip"
-        style={{
-          left: Math.min(Math.max(x, 90), Math.max(w - 90, 90)),
-          top: y,
-          transform: below ? 'translate(-50%, 14px)' : undefined,
-        }}
-      >
+      <Tip x={x} y={y} width={wrap.current?.clientWidth ?? 0} below={y < 80}>
         {tooltip(hover)}
-      </div>
+      </Tip>
     );
   }
 

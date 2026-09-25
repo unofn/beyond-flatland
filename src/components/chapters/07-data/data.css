@@ -47,8 +47,7 @@
   border: 1px solid var(--ink-faint);
   padding: 4px 8px;
   color: var(--ink);
-  white-space: nowrap;
-  transform: translate(-50%, calc(-100% - 12px));
+  max-width: calc(100% - 8px);
   z-index: 1;
 }
 
