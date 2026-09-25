@@ -71,22 +71,25 @@ Read the source; these are summaries.
 - `edgeAxes(poly)` → the axis each edge runs along (for colouring)
 
 **3D** `src/components/scene`
-- `<PaperCanvas depth extent label bind>` R3F canvas on paper; orthographic at depth 0;
+- `<PaperCanvas depth extent label role bind>` R3F canvas on paper; orthographic at depth 0;
   camera fits `extent` to the narrower side; pauses offscreen. A tesseract under 4D
   perspective needs `extent≈3.2`.
 - `useNdRotation({ n, angles, spin, autoplay })` → `{ rot, bind, playing, setPlaying }`.
   Pass `bind` to `<PaperCanvas bind={bind}>`. Drag = turntable (xz/yz);
   on touch only horizontal drags rotate so vertical swipes still scroll the page.
   W-plane rotations come from sliders (`angles`) or `spin`, never from the drag.
-- `<NdObject poly rotation depth projection color lineWidth edgeOpacity pre faces scale>` ink rendering of any polytope.
+- `<NdObject poly rotation depth projection color edgeColors lineWidth edgeOpacity pre preKey faces faceColors vertexSize scale>`
+  ink rendering of any polytope. Objects sharing one rotation advance it once per frame.
+  `edgeOpacity` mixes toward paper (not true transparency). `color="axis"` is only meaningful for hypercubes.
 - `<SectionView section color fill>` renders a `slice()` result.
 - `<InkSegments positions colors width>` / `useInkSegments` for custom pen strokes.
 - `<Canvas2D draw animate label>` crisp 2D canvas; `draw({ ctx, width, height, time, dt, tokens })`.
   A static canvas redraws when `draw` changes identity; animated ones read the latest `draw` each frame.
 - `useTokens()` resolved colours; `axisColor(tokens, i)`; `useReducedMotion()`.
 
-**Controls** `src/components/ui`: `Slider` (with `axis` tint), `Segmented`, `Button`,
-`FigureShell` (drawing area + controls row), `axisName(i)`, `planeName(i, j)`.
+**Controls** `src/components/ui`: `Slider` (`axis` tint, `hideValue`, `className`), `Segmented` (wraps),
+`Button`, `FigureShell` (drawing area + controls row), `axisName(i)`, `planeName(i, j)`,
+`<PlaneLabel i j>` (plane name in axis colours).
 
 **Prose** (available in every chapter MDX without importing):
 `<Scrolly id>` + `<Step>`, `<Plate caption ratio fill>`, `<Deeper title>`, `<SquareSays>`.
