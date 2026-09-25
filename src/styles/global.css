@@ -36,7 +36,6 @@ body:lang(zh) {
   line-height: var(--leading-cjk);
   font-family: var(--font-text);
   text-align: justify;
-  text-justify: inter-character;
 }
 
 h1,
