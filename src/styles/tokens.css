@@ -7,6 +7,16 @@
  * Axis colour convention (use everywhere, in text and figures):
  *   x → --axis-0 red, y → --axis-1 yellow, z → --axis-2 blue, w → --axis-3 violet,
  *   axes 4+ → --axis-hi (ink grey).
+ *
+ * The four stroke colours are validated as a categorical palette (dataviz
+ * skill, validate_palette.js, all pairs, since all four meet in one figure):
+ * every pair stays ≥ 10.8 OKLab ΔE apart under simulated protanopia and
+ * deuteranopia, and ≥ 22 for normal vision, in both themes. They differ in
+ * lightness as well as hue, so red/yellow and blue/violet survive red-green
+ * colour blindness. Yellow strokes are 2.7:1 against paper (allowed because
+ * axes are always labelled in text); inline text uses the --axis-N-text
+ * variants, which all reach 4.5:1. Re-run the validator if you touch them:
+ *   node validate_palette.js "<axis-0..3>" --mode light --surface "<paper>" --pairs all
  */
 :root {
   color-scheme: light;
@@ -18,11 +28,17 @@
   --ink-soft: #5e5850;
   --ink-faint: #9a948a;
 
-  --byrne-red: #bf2e24;
-  --byrne-yellow: #e1a518;
-  --byrne-yellow-ink: #8f6600; /* yellow that stays legible as text or a thin line */
-  --byrne-blue: #1d4f91;
-  --beyond-violet: #7b3f98;
+  --byrne-red: #a2261c;
+  --byrne-yellow: #e1a518; /* fills only */
+  --byrne-yellow-ink: #b88a12; /* yellow strokes */
+  --byrne-blue: #1e5096;
+  --beyond-violet: #a95cbc;
+
+  /* Inline text in axis colours (≥ 4.5:1 on paper). */
+  --axis-0-text: #a2261c;
+  --axis-1-text: #7d5c00;
+  --axis-2-text: #1e5096;
+  --axis-3-text: #8a3fa0;
 
   --axis-0: var(--byrne-red);
   --axis-1: var(--byrne-yellow-ink);
@@ -98,11 +114,15 @@
     --ink: #e8e4d8;
     --ink-soft: #aaa497;
     --ink-faint: #6d6a63;
-    --byrne-red: #e2594b;
+    --byrne-red: #c5193d;
     --byrne-yellow: #edbb3f;
-    --byrne-yellow-ink: #e3b23a;
-    --byrne-blue: #72a0e3;
-    --beyond-violet: #b784d6;
+    --byrne-yellow-ink: #ae8a26;
+    --byrne-blue: #296c9b;
+    --beyond-violet: #b165eb;
+    --axis-0-text: #f0707e;
+    --axis-1-text: #d9b04a;
+    --axis-2-text: #6fa6d8;
+    --axis-3-text: #c690f0;
   }
 }
 
@@ -114,9 +134,13 @@
   --ink: #e8e4d8;
   --ink-soft: #aaa497;
   --ink-faint: #6d6a63;
-  --byrne-red: #e2594b;
+  --byrne-red: #c5193d;
   --byrne-yellow: #edbb3f;
-  --byrne-yellow-ink: #e3b23a;
-  --byrne-blue: #72a0e3;
-  --beyond-violet: #b784d6;
+  --byrne-yellow-ink: #ae8a26;
+  --byrne-blue: #296c9b;
+  --beyond-violet: #b165eb;
+  --axis-0-text: #f0707e;
+  --axis-1-text: #d9b04a;
+  --axis-2-text: #6fa6d8;
+  --axis-3-text: #c690f0;
 }

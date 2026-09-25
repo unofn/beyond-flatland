@@ -21,7 +21,7 @@ export interface SectionViewProps {
 /** Renders a cross-section: the shape a lower-dimensional being would see. */
 export function SectionView({ section, color, lineWidth = 2.2, fill = true, fillOpacity = 0.22, scale = 1 }: SectionViewProps) {
   const tokens = useTokens();
-  const stroke = color ?? tokens?.axis[3] ?? '#7b3f98';
+  const stroke = color ?? tokens?.axis[3] ?? '#a95cbc';
 
   if (import.meta.env.DEV && (section.points[0]?.length ?? 0) > 3)
     console.warn('SectionView draws only the first three coordinates; project a 4D+ section to 3D first.');

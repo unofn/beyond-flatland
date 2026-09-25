@@ -41,7 +41,7 @@ export function InkSection({ section, rotation, lineWidth = 2.2, fillOpacity = 0
   const tokens = useTokens();
   const ink = useInkSegments(lineWidth);
   const group = useRef<Group>(null);
-  const stroke = tokens?.axis[3] ?? '#7b3f98';
+  const stroke = tokens?.axis[3] ?? '#a95cbc';
 
   const pts = useMemo(
     () => section.points.map((p) => [p[0] ?? 0, p[1] ?? 0, p[2] ?? 0] as const),

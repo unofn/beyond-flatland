@@ -110,10 +110,10 @@ em {
 }
 
 /* Axis-coloured inline text: <span class="axis-3">w</span> */
-.axis-0 { color: var(--axis-0); }
-.axis-1 { color: var(--axis-1); }
-.axis-2 { color: var(--axis-2); }
-.axis-3 { color: var(--axis-3); }
+.axis-0 { color: var(--axis-0-text); }
+.axis-1 { color: var(--axis-1-text); }
+.axis-2 { color: var(--axis-2-text); }
+.axis-3 { color: var(--axis-3-text); }
 
 .katex {
   font-size: 1.05em;
