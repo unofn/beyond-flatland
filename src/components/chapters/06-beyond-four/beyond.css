@@ -1,0 +1,312 @@
+/* Chapter 6 figures. Hairlines, ink tokens, lining figures for numbers. */
+
+/* ---- Petrie figure: readout, drawing, legend stacked ---- */
+.bf-stack {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 6px 10px;
+}
+.bf-stack__art {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+.bf-readout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.8em;
+  margin: 0;
+  font-size: var(--step--1);
+  line-height: 1.35;
+  color: var(--ink-soft);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.bf-readout__n {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-style: italic;
+  color: var(--ink);
+}
+.bf-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.9em;
+  min-height: 1.4em;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--step--1);
+  line-height: 1.4;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+.bf-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+}
+.bf-legend sub {
+  font-size: 0.75em;
+  line-height: 0;
+}
+.bf-key {
+  display: inline-block;
+  width: 14px;
+  height: 2px;
+}
+
+/* ---- Count table ---- */
+.bf-count {
+  max-width: var(--measure);
+  margin: var(--space-3) 0 var(--space-4);
+}
+.bf-predict {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+  margin-bottom: var(--space-2);
+}
+.bf-predict label {
+  flex: 1 1 100%;
+}
+.bf-predict input {
+  font: inherit;
+  font-variant-numeric: lining-nums tabular-nums;
+  width: 6em;
+  min-height: 32px;
+  padding: 0.2em 0.4em;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--ink);
+  border-radius: 0;
+}
+.bf-predict input:disabled {
+  color: var(--ink-soft);
+  border-bottom-color: var(--ink-faint);
+}
+.bf-predict__verdict {
+  margin: 0;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+:lang(zh) .bf-predict__verdict {
+  font-style: normal;
+}
+.bf-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+.bf-table {
+  border-collapse: collapse;
+  font-size: var(--step--1);
+  line-height: 1.3;
+  font-variant-numeric: lining-nums tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+  min-width: 100%;
+}
+.bf-table caption {
+  caption-side: bottom;
+  text-align: left;
+  padding: var(--space-1) 0;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+:lang(zh) .bf-table caption {
+  font-style: normal;
+}
+.bf-table th,
+.bf-table td {
+  padding: 0.35em 0.55em;
+}
+.bf-table thead th {
+  font-weight: 400;
+  vertical-align: bottom;
+  border-bottom: 1px solid var(--ink-faint);
+}
+.bf-table__sub {
+  display: block;
+  font-size: 0.8em;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+:lang(zh) .bf-table__sub {
+  font-style: normal;
+}
+.bf-table tbody th,
+.bf-table__corner {
+  position: sticky;
+  left: 0;
+  background: var(--paper);
+  text-align: left;
+  font-weight: 400;
+  font-style: italic;
+  border-right: 1px solid var(--ink-faint);
+}
+.bf-table__corner span {
+  display: block;
+}
+.bf-table tbody tr + tr > * {
+  border-top: 1px solid color-mix(in oklab, var(--paper-edge) 60%, transparent);
+}
+.bf-table tbody tr.is-current > * {
+  background: var(--paper-shade);
+}
+.bf-table tbody tr.is-current > th {
+  box-shadow: inset 2px 0 0 var(--accent);
+  color: var(--accent);
+}
+.bf-table__empty {
+  background: transparent;
+}
+.bf-table__ask button {
+  font: inherit;
+  min-width: 2.4em;
+  min-height: 28px;
+  color: var(--accent);
+  background: transparent;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-control);
+  cursor: pointer;
+}
+.bf-table__answer {
+  color: var(--accent);
+}
+.bf-count__more {
+  font-size: var(--step--1);
+  color: var(--ink-soft);
+  margin: var(--space-1) 0 0;
+}
+.bf-count__controls {
+  margin-top: var(--space-2);
+  max-width: 24em;
+}
+
+/* ---- Ball charts ---- */
+.bf-chart {
+  position: absolute;
+  inset: 0;
+}
+.bf-chart svg {
+  display: block;
+  touch-action: pan-y;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.bf-chart__title {
+  font-size: 13px;
+  fill: var(--ink);
+}
+.bf-chart__tick {
+  font-size: 11px;
+  fill: var(--ink-soft);
+}
+.bf-chart__tick.is-selected {
+  fill: var(--ink);
+  font-weight: 700;
+}
+.bf-chart__grid {
+  stroke: var(--paper-edge);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+.bf-chart__axis {
+  stroke: var(--ink-faint);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+.bf-chart__bar {
+  fill: var(--ink-soft);
+}
+.bf-chart__bar.is-selected {
+  fill: var(--accent);
+}
+.bf-chart__value {
+  font-size: 12px;
+  fill: var(--ink);
+}
+.bf-chart__note {
+  font-size: 11px;
+  fill: var(--ink-soft);
+}
+.bf-chart__readout {
+  flex: 1 1 100%;
+  margin: 0;
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--ink);
+}
+
+/* ---- Corners and skin ---- */
+.bf-corners {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.bf-corners__stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+.bf-meters {
+  margin: 0;
+  padding: 0 10px 8px;
+  display: grid;
+  grid-template-columns: auto 1fr minmax(4em, auto);
+  align-items: center;
+  gap: 0.3em 0.8em;
+  font-size: var(--step--1);
+  line-height: 1.3;
+}
+.bf-meter,
+.bf-meter dd {
+  display: contents;
+}
+.bf-meter dt {
+  color: var(--ink-soft);
+}
+.bf-meter__track {
+  position: relative;
+  height: 8px;
+  border-bottom: 1px solid var(--ink-faint);
+}
+.bf-meter__fill {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 6px;
+}
+.bf-meter__fill--ink {
+  background: var(--ink-soft);
+}
+.bf-meter__fill--accent {
+  background: var(--accent);
+}
+.bf-meter__tick {
+  position: absolute;
+  bottom: -4px;
+  width: 1px;
+  height: 12px;
+  background: var(--ink);
+}
+.bf-meter__value {
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--ink);
+  text-align: right;
+}
+@media (max-width: 480px) {
+  .bf-meters {
+    grid-template-columns: 1fr minmax(4em, auto);
+  }
+  .bf-meter dt {
+    grid-column: 1 / -1;
+    margin-top: 0.2em;
+  }
+}
