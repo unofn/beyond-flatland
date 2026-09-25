@@ -1,0 +1,81 @@
+/* Overlays for chapter 7's flat figures: legends, readouts, tooltips. */
+.d7-overlay {
+  position: absolute;
+  pointer-events: none;
+  font-size: var(--step--1);
+  line-height: 1.35;
+  color: var(--ink-soft);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.d7-legend {
+  top: 8px;
+  left: 10px;
+  right: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 12px;
+  color: var(--ink);
+}
+
+.d7-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.d7-legend svg {
+  width: 12px;
+  height: 12px;
+  overflow: visible;
+}
+
+.d7-readout {
+  left: 10px;
+  bottom: 8px;
+  right: 10px;
+}
+
+.d7-readout strong {
+  color: var(--ink);
+  font-weight: 400;
+}
+
+.d7-tip {
+  background: var(--paper);
+  border: 1px solid var(--ink-faint);
+  padding: 4px 8px;
+  color: var(--ink);
+  white-space: nowrap;
+  transform: translate(-50%, calc(-100% - 12px));
+  z-index: 1;
+}
+
+.d7-tip__sub {
+  color: var(--ink-soft);
+}
+
+.d7-swatch {
+  top: 10px;
+  left: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+}
+
+.d7-swatch__chip {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--ink);
+}
+
+/* Four sliders sit two to a row on a phone instead of stacking four deep. */
+.d7-controls {
+  display: contents;
+}
+.d7-controls .ctl-slider {
+  min-width: 9.5em;
+  flex-basis: 9.5em;
+}
