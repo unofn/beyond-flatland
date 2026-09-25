@@ -1,0 +1,92 @@
+---
+title: Unfolding
+subtitle: A tesseract laid open as eight cubes
+order: 5
+summary: Cut a cube along its edges and it lies flat as six squares; cut a tesseract and it lies open in our space as eight cubes, a third way to see the fourth dimension.
+depth: 3
+---
+
+import CubeFold from '../../../components/chapters/05-unfolding/CubeFold';
+import TesseractFold from '../../../components/chapters/05-unfolding/TesseractFold';
+
+So far you have looked at the tesseract two ways. You pushed it through our space and watched its cross-sections, one slice at a time. You shone a light on it and studied its shadow. Slices only ever show you a piece. Shadows show you everything, but bent out of shape.
+
+There is a third way, and you have done it since childhood: take a cardboard box apart. Cut along a few edges and the box lies flat as one sheet. Every face keeps its true size and shape. The price is that some edges that used to meet now sit in two different places on the sheet.
+
+## Fold a cube
+
+Here are six squares in the shape of a cross. Drag the slider and fold them up.
+
+<Plate caption="The cross-shaped net of a cube. Drag the drawing to turn it." ratio="1">
+  <CubeFold client:only="react" locale="en" />
+</Plate>
+
+Each square turns about the edge it shares with its neighbour. At 90° the six faces close into a cube: the middle square becomes the floor, the far end of the cross becomes the lid.
+
+The colours tell you in advance where each face will land. A face is painted the colour of the axis it ends up perpendicular to: <span class="axis-0">x red</span>, <span class="axis-1">y yellow</span>, <span class="axis-2">z blue</span>. The two red squares sit on the arms of the cross and finish facing each other; so do the yellows, and the blues. In a net, opposite faces are never neighbours.
+
+Now look at the outline of the cross. Every edge without a fold is a cut edge, split into two halves that lie in different places around the rim. As you fold, the halves find each other in pairs and stitch the cube shut.
+
+<SquareSays>This cross I can draw, and I know every square in it. But "fold it up"? Up which way? My world has no up.</SquareSays>
+
+A Square can hold the whole net in his hands and still cannot take the last step. Folding needs a direction he does not have.
+
+## Unfold a tesseract
+
+Do the same thing one dimension higher. The faces of a tesseract are cubes, called cells, and there are eight of them. Cut along some of its square faces and the tesseract opens out into our three-dimensional space as eight cubes stuck together.
+
+<Scrolly id="tesseract-net">
+  <Plate slot="figure" fill caption="A net of eight cubes, folding in four dimensions.">
+    <TesseractFold client:only="react" locale="en" scrolly="tesseract-net" />
+  </Plate>
+  <Step>
+
+  **A cross in three dimensions.** Four cubes stand in a column; the second from the top has four more attached to its front, back, left and right. The middle cube stays put. Each of the other seven is joined to a neighbour by one square face, just as the squares were joined by one edge.
+
+  </Step>
+  <Step>
+
+  **Into the fourth direction.** Now every cube turns about the square it shares with its neighbour. Not up, down, left or right: it turns into <span class="axis-3">w</span>. Our space has no room for that move, so what you see is the fold's shadow.
+
+  The edges already drawn in <span class="axis-3">violet</span> are the ones that will stand up along <span class="axis-3">w</span>.
+
+  </Step>
+  <Step>
+
+  **Closing in.** The four cubes around the middle, and the two next to it in the column, swing inward and look like six slanted blocks. The cube at the foot of the column folds twice and ends up small, in the very centre. The middle cube, which never moved, becomes the big frame around the outside.
+
+  They look squashed, but that is the shadow's doing. In four dimensions all eight cubes stay the same size, and none passes through another.
+
+  </Step>
+  <Step>
+
+  **Closed.** This is the cube-inside-a-cube shadow from the last chapter. Drag it to look from other sides, or use the slider to open it out again.
+
+  The square faces that were cut apart in the net are now glued in pairs. Every square face of a tesseract belongs to exactly two cells.
+
+  </Step>
+</Scrolly>
+
+<SquareSays>So you stand before a tesseract as I stand before a cube: every piece laid out in front of you, and one fold missing.</SquareSays>
+
+## Dalí's cross
+
+We did not invent this cross. In 1954 Salvador Dalí painted [*Crucifixion (Corpus Hypercubus)*](https://en.wikipedia.org/wiki/Crucifixion_(Corpus_Hypercubus)), in which the cross is not two wooden beams but exactly this net of eight cubes. Christ floats in front of it with no nails in his hands or feet, above a vast chessboard. The painting hangs in the Metropolitan Museum of Art in New York.
+
+One common reading: a net is the natural way to paint something larger than our space. You can see every part of it, but not the whole closed shape, because closing it means folding in a direction you cannot point to.
+
+<Deeper title="How many nets are there?">
+
+The cross is not the only way to lay a cube flat. Cut different edges and you get different shapes. Counting shapes that differ only by a turn or a flip as one, a cube has **11** nets.
+
+A tesseract has **261**. Peter Turney counted them in 1984.
+
+Every net is a tree: the $2n$ cells of an $n$-cube are held together by exactly $2n-1$ folds. A cube has $12$ edges and its net keeps $5$ as folds, so $12-5=7$ pairs of cut edges must be stitched back together. A tesseract has $24$ square faces and its net keeps $7$ as folds, so $24-7=17$ pairs of squares must be glued.
+
+</Deeper>
+
+## Three ways of seeing
+
+Slices, shadows, nets. Each loses something and keeps something true. A slice shows the real shape, but only a sliver at a time. A shadow shows it all at once, but distorted. A net keeps every cell undistorted, but tears apart faces that belong together. Put the three side by side and the tesseract is no longer quite a stranger.
+
+In the next chapter we go beyond four. In five dimensions, six, all the way to twelve, pictures stop helping, and patterns take over: how the numbers of vertices, edges and faces grow from one dimension to the next, laid out in a single table.
