@@ -1,0 +1,114 @@
+---
+title: The Shadows of Data
+subtitle: Before a thousand dimensions, we are all Flatlanders
+order: 7
+summary: A dimension is any number you can vary on its own; data live in many dimensions, and we only ever see their shadows.
+depth: 4
+---
+
+import ColorCube from '../../../components/chapters/07-data/ColorCube';
+import IrisShadow from '../../../components/chapters/07-data/IrisShadow';
+import EmbeddingShadow from '../../../components/chapters/07-data/EmbeddingShadow';
+import DistanceHistogram from '../../../components/chapters/07-data/DistanceHistogram';
+
+Last chapter we climbed to twelve dimensions. The shapes were lovely, but you might fairly ask: does anything in the world really have twelve dimensions?
+
+Plenty does, once you loosen the word a little. **A dimension is any number you can vary on its own.** However many such numbers it takes to describe a thing, that is how many dimensions it lives in.
+
+## A colour is a point
+
+Every colour on your screen is a mix of red, green and blue light, each set somewhere between 0 and 255. Three numbers, each free of the others. So a colour is a point in three-dimensional space, and all the colours together fill a cube.
+
+<Plate caption="The colour cube. Start at the black corner, walk some way along each of three edges, and you arrive at your colour." ratio="1">
+  <ColorCube client:only="react" locale="en" />
+</Plate>
+
+Move the sliders to mix a colour and watch its point travel through the cube; drag the drawing to turn it. Black sits at one corner and white at the opposite one, with every grey strung along the diagonal between them.
+
+A word of warning. Throughout this book red, yellow and blue have marked the x, y and z axes. The red, green and blue here are something else, the three channels of a colour, which is why this cube is drawn in plain ink.
+
+## Four measurements, four dimensions
+
+In 1936 the statistician Ronald Fisher published a table of 150 iris flowers from three species, *setosa*, *versicolor* and *virginica*. Each flower was measured four ways: the length and width of its sepal and of its petal, in centimetres. The botanist Edgar Anderson did the measuring. The data are in the public domain, and you will find them in almost every statistics textbook.
+
+Four numbers make a point in four dimensions. Call sepal length <span class="axis-0">x</span>, sepal width <span class="axis-1">y</span>, petal length <span class="axis-2">z</span> and petal width <span class="axis-3">w</span>. The 150 flowers become 150 points: a cloud in four-dimensional space.
+
+We cannot see four dimensions. But chapter 4 taught us a trick: look at the shadow.
+
+<Plate caption="Fisher’s irises (1936). The shadow of a four-dimensional cloud; the coloured strokes are the shadows of the four axes." ratio="5/6">
+  <IrisShadow client:only="react" locale="en" />
+</Plate>
+
+You begin with the cloud’s shadow on the x–y wall, which means sepals only. The triangles (*setosa*) keep to themselves, but the other two species are tangled together.
+
+Now slowly drag the xz slider. It is the move you made with the tesseract in chapter 4: the cloud turns in the x–z plane, and petal length swings into the shadow. Squares and pentagons begin to part. The coloured strokes show how much of each measurement the current shadow holds. Only these four planes matter: a turn in the x–y plane just spins the shadow in place, and a turn in the z–w plane leaves it untouched.
+
+The line beneath the cloud says how much of its spread survives in the shadow, how much of the difference between one flower and another you can still see. Finally, press Best shadow. The cloud turns to a special angle: across is the direction in which it stretches furthest, and up is the perpendicular direction in which it stretches next furthest. This is **principal component analysis**, or PCA, and it is often the first thing a data scientist tries on an unfamiliar cloud. This shadow keeps 98% of the spread. The sepal wall kept 19%.
+
+<SquareSays>A cloud I shall never see, sorted into three kinds of flower by its shadow alone. If only the Sphere had shown me things this way.</SquareSays>
+
+<Deeper title="How the best shadow is found">
+
+Let the shadow’s plane be spanned by two perpendicular unit vectors $\mathbf u, \mathbf v$. Write a flower’s four measurements, minus the average of all 150, as $\mathbf p$. Its place in the shadow is
+
+$$
+(\mathbf u \cdot \mathbf p,\ \mathbf v \cdot \mathbf p).
+$$
+
+The spread of the cloud is described by the $4 \times 4$ covariance matrix
+
+$$
+C_{ij} = \frac{1}{N-1} \sum_{k=1}^{N} p_{k,i}\, p_{k,j}.
+$$
+
+The fraction a shadow keeps is $(\mathbf u^{\top} C \mathbf u + \mathbf v^{\top} C \mathbf v) / \operatorname{tr} C$. It is largest when $\mathbf u, \mathbf v$ are the top two eigenvectors of $C$: $C\mathbf u = \lambda_1 \mathbf u$ and $C\mathbf v = \lambda_2 \mathbf v$.
+
+This chapter finds them by power iteration. Take any vector, multiply by $C$ and shrink back to unit length, again and again: it swings round to the direction in which the cloud stretches furthest. Then subtract $\lambda_1 \mathbf u \mathbf u^{\top}$ from $C$ and repeat for the next. The irises’ four eigenvalues are about 4.23, 0.24, 0.08 and 0.02; the first two make up 98% of the total. The sums use raw centimetres, without first standardising the four measurements; standardise them and the best shadow changes somewhat.
+
+</Deeper>
+
+## Thousands of dimensions
+
+An iris needs four numbers. Modern AI systems that work with language often turn a word or a sentence into a list of several hundred to a few thousand numbers, called an embedding. Sentences with similar meanings tend to get similar lists. In other words, in that space of thousands of dimensions they are fairly close points.
+
+We won’t use real embeddings here, only a made-up stand-in: 240 points of 50 numbers each, secretly drawn from four groups.
+
+<Plate caption="A made-up cloud in fifty dimensions. The shapes are drawn for you; the calculation never knows which point belongs to which group." ratio="1">
+  <EmbeddingShadow client:only="react" locale="en" />
+</Plate>
+
+Try a few random shadows and you will mostly see fog. Press Best shadow and the four groups surface. PCA was never told which point belongs where; it simply looks for the directions in which the cloud stretches furthest.
+
+Be clear about its limits too. This best shadow keeps only about a fifth of the spread, and the rest is flattened away. In real data the structure is usually more curved and better hidden, and one flat shadow tells you even less. It is a first look at data, not the last word.
+
+## When near and far stop meaning much
+
+High dimensions have a stranger habit still. Scatter 160 points at random in an n-dimensional cube, measure the distance between every pair, and draw the histogram.
+
+<Plate caption="Distances between random points in a cube, in units of the average distance." ratio="5/4">
+  <DistanceHistogram client:only="react" locale="en" />
+</Plate>
+
+In one or two dimensions some points are close neighbours and others are far apart, so the histogram is broad. Push n up and it narrows into a spike. By a thousand dimensions the farthest pair is less than 20% farther apart than the nearest. Near and far have almost merged.
+
+This is chapter 6’s crowded corners again. Nearly all the volume of a high-dimensional cube lies far from its centre, so random points land out there, all roughly the same distance apart. It is one reason why finding “the most similar item” in high-dimensional data is harder than it sounds.
+
+<Deeper title="Why distances bunch up">
+
+Take two random points in the unit cube. Each coordinate difference, squared, averages $1/6$, so the squared distance averages $n/6$ and the distance itself is about $\sqrt{n/6}$, growing with $n$. But the wobble in the distance does not grow: its standard deviation $\sigma$ settles near $\sqrt{7/120} \approx 0.24$. So against the mean distance $\mu$,
+
+$$
+\frac{\sigma}{\mu} \approx \frac{0.59}{\sqrt n} \longrightarrow 0.
+$$
+
+</Deeper>
+
+## Back to Flatland
+
+More than a century ago, A Square could see only slices of the Sphere: a circle that grew and shrank. Not until the Sphere lifted him out of the plane did he believe there was a whole thing behind them.
+
+Before our data, we are Flatlanders too, and no one is coming to lift us into a thousand dimensions. We slice the cloud, cast its shadows and piece its shape together a little at a time. The tricks of this book — adding a dimension, taking a slice, looking at the shadow, unfolding — work there as well as anywhere.
+
+<SquareSays>I once believed the world had only length and breadth. Now I know that if you turn a thing the right way, its shadow will always tell you more.</SquareSays>
+
+That is the end of the book. Every figure is waiting in the [Laboratory](/en/lab/), with every parameter unlocked. Play freely.
