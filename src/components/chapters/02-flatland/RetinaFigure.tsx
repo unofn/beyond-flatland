@@ -1,6 +1,6 @@
 /**
  * A small patch of Flatland seen from above, and beneath it A Square's
- * one-dimensional retina: one ray per column, inked as dark as the fog allows.
+ * one-dimensional retina: one ray per column, inked as strongly as the fog allows.
  */
 import { useCallback, useRef, useState, type KeyboardEvent, type PointerEvent } from 'react';
 import { Canvas2D, type Draw2DContext } from '../../scene/Canvas2D';
@@ -12,14 +12,14 @@ import { drawFov, drawRetina, drawSeen, drawSquare, pathPoly, view } from './dra
 
 const s = defineStrings({
   zh: {
-    label: '俯视平面国的一小块地方：正方形先生、一座五边形的房子和几个多边形邻居；下方的长条是正方形先生眼中的景象，近处的东西颜色更深',
+    label: '俯视平面国的一小块地方：正方形先生、一座五边形的房子和几个多边形邻居；下方的长条是正方形先生眼中的景象，越近的东西颜色越浓',
     retina: '正方形先生看到的',
     turn: '朝向',
     reset: '复位',
   },
   en: {
     label:
-      'A patch of Flatland seen from above: A Square, a pentagonal house and a few polygon neighbours; the strip beneath shows what A Square sees, nearer things darker',
+      'A patch of Flatland seen from above: A Square, a pentagonal house and a few polygon neighbours; the strip beneath shows what A Square sees, nearer things stronger',
     retina: 'What A Square sees',
     turn: 'Facing',
     reset: 'Reset',
