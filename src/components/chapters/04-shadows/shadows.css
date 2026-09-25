@@ -1,0 +1,61 @@
+/* Local layout for chapter 4 figure controls. */
+
+/* A rotation-plane name with each letter in its axis colour. */
+.sh-plane {
+  font-style: italic;
+  letter-spacing: 0.02em;
+}
+
+/* Tab bar + reset: always its own line so the panel beneath stays short. */
+.sh-tabs {
+  flex: 1 1 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-2);
+}
+
+.sh-tabs .ctl-seg button {
+  padding-left: 0.65em;
+  padding-right: 0.65em;
+}
+
+.sh-reset {
+  min-width: 32px;
+  padding-left: 0.6em;
+  padding-right: 0.6em;
+}
+
+/* One panel of controls beneath the tabs. */
+.sh-panel {
+  flex: 1 1 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+/*
+ * Phones: the scrolly figure is only half the screen tall, so a panel's
+ * controls share one row and the sliders drop their numeric readout (screen
+ * readers still get aria-valuetext).
+ */
+@media (max-width: 899px) {
+  .sh-panel {
+    flex-wrap: nowrap;
+    gap: var(--space-2);
+  }
+  .sh-panel .ctl-slider {
+    min-width: 0;
+    flex: 1 1 0;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.35em;
+  }
+  .sh-panel .ctl-slider__value {
+    display: none;
+  }
+  .sh-panel .ctl-seg {
+    flex: none;
+  }
+}
