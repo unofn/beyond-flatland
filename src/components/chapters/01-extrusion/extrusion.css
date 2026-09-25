@@ -1,0 +1,135 @@
+/* Chapter 1 local styles. Everything is prefixed ext- to stay out of the way. */
+
+.ext-tally {
+  position: absolute;
+  left: var(--space-2);
+  top: var(--space-1);
+  margin: 0;
+  font-size: var(--step--1);
+  line-height: 1.4;
+  color: var(--ink-soft);
+  font-variant-numeric: lining-nums tabular-nums;
+  pointer-events: none;
+  text-align: left;
+}
+
+/* ---- Count table ---- */
+
+.ext-count {
+  margin: var(--space-3) 0 var(--space-4);
+}
+
+.ext-count table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.94em;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.ext-count caption {
+  caption-side: top;
+  text-align: left;
+  font-size: var(--step--1);
+  color: var(--ink-soft);
+  padding-bottom: var(--space-1);
+}
+
+.ext-count th,
+.ext-count td {
+  padding: 0.4em 0.35em;
+  border-bottom: 1px solid var(--paper-edge);
+  vertical-align: top;
+}
+
+.ext-count thead th {
+  font-weight: 400;
+  font-size: var(--step--1);
+  color: var(--ink-soft);
+  border-bottom: 1px solid var(--ink);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.ext-count thead th:first-child,
+.ext-count tbody th {
+  text-align: left;
+}
+
+.ext-count tbody th {
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.ext-count td {
+  text-align: right;
+  min-width: 2.6em;
+}
+
+.ext-count__dim {
+  display: inline-block;
+  width: 1.1em;
+  color: var(--ink-soft);
+}
+
+.ext-count__empty {
+  color: var(--ink-faint);
+}
+
+.ext-count__predict th,
+.ext-count__predict td {
+  border-bottom: 1px solid var(--ink);
+}
+
+.ext-count input {
+  width: 3.4em;
+  font: inherit;
+  font-variant-numeric: lining-nums tabular-nums;
+  text-align: right;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--axis-3);
+  border-radius: 0;
+  padding: 0.1em 0.1em;
+  min-height: 32px;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+.ext-count input::-webkit-inner-spin-button,
+.ext-count input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.ext-count input::placeholder {
+  color: var(--ink-faint);
+}
+
+.ext-count__answer {
+  font-weight: 700;
+}
+
+.ext-count__note {
+  display: block;
+  font-size: var(--step--1);
+  line-height: 1.35;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.ext-count__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  font-size: var(--step--1);
+  color: var(--ink-soft);
+}
+
+.ext-count__feedback {
+  margin-top: var(--space-2);
+}
+
+.ext-count__feedback p {
+  margin: 0 0 var(--space-2);
+}

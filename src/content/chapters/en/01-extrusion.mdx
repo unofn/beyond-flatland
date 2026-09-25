@@ -1,0 +1,121 @@
+---
+title: One More Direction
+subtitle: Dragging a point all the way to a tesseract
+order: 1
+summary: Drag a point into one new direction after another to build a segment, a square, a cube and a tesseract with your own hands, and count their parts as you go.
+depth: 1
+---
+
+import ExtrusionFigure from '../../../components/chapters/01-extrusion/ExtrusionFigure';
+import CountTable from '../../../components/chapters/01-extrusion/CountTable';
+
+Start with a point. It has no length, no width, no thickness. It marks a place and nothing more. A point has zero dimensions: inside it, there is nowhere to go.
+
+Every shape in this chapter is made with a single move. Take whatever you have and drag it in a new direction, one at right angles to every direction you have used so far.
+
+The drawing changes as you read. The slider beneath it lets you do the dragging yourself.
+
+<Scrolly id="extrude">
+  <Plate slot="figure" fill caption="Each time, a copy slides out in a new direction">
+    <ExtrusionFigure client:only="react" locale="en" scrolly="extrude" stage="build" />
+  </Plate>
+  <Step>
+
+  **A point.** Zero dimensions. It is there, and there is nothing about it you could measure.
+
+  Try the slider under the drawing, or read on.
+
+  </Step>
+  <Step>
+
+  **Drag along <span class="axis-0">x</span>.** Pull the point to the right. The original stays where it was, a copy slides away, and between them a red edge is swept out.
+
+  That is a line segment: one dimension, two vertices, one edge. A creature living on it could only go forward or back. That is Lineland.
+
+  </Step>
+  <Step>
+
+  **Drag along <span class="axis-1">y</span>.** Now drag the whole segment at right angles to the red edge. As the copy slides off, each of its two ends sweeps a yellow edge.
+
+  Original, copy and two new edges close up into a square: four vertices, four edges.
+
+  <SquareSays>So that is how I was made. A line, pushed sideways.</SquareSays>
+
+  </Step>
+  <Step>
+
+  **Drag along <span class="axis-2">z</span>.** The third direction is at right angles to both the red and the yellow. Nobody in Flatland can point to it. You can: straight up out of the page.
+
+  At first you are looking straight down that direction. The copy moves away from you, so it looks smaller: a square inside a square. That is only perspective. Remember it; you will need it soon.
+
+  Then the view turns and the cube appears: eight vertices, twelve edges, six square faces.
+
+  </Step>
+</Scrolly>
+
+## Keep count
+
+Every drag grows the shape in the same way. The table below keeps a record of what you have built, one row for each shape as you finish it.
+
+Next you will drag the cube into a fourth direction. Before you see the result, guess the last row: how many vertices, edges, squares and cubes will the tesseract have? Look hard at the step from square to cube and ask where each number came from.
+
+<CountTable client:only="react" locale="en" scrolly="extrude" />
+
+## The fourth direction
+
+There is no fourth direction in your room. It would have to be at right angles to <span class="axis-0">x</span>, <span class="axis-1">y</span> and <span class="axis-2">z</span> all at once. But the move doesn't need you to see the direction; it only needs the direction to exist, and mathematics is happy to grant that. Call it <span class="axis-3">w</span>, and draw it in violet.
+
+<Scrolly id="extrude-w">
+  <Plate slot="figure" fill caption="Dragging the cube into the fourth direction">
+    <ExtrusionFigure client:only="react" locale="en" scrolly="extrude-w" stage="beyond" />
+  </Plate>
+  <Step>
+
+  **Drag along <span class="axis-3">w</span>.** Drag the whole cube into <span class="axis-3">w</span>. Each of the eight corners sweeps a violet edge, and the copy slides away from you, shrinking as it goes.
+
+  </Step>
+  <Step>
+
+  **A cube inside a cube.** This is what you saw when you looked straight down <span class="axis-2">z</span> at the cube. Then the copy moved away along <span class="axis-2">z</span>, so a small square sat inside a big one. Now it moves away along <span class="axis-3">w</span>, so a small cube sits inside a big one.
+
+  The inner cube is really just as big as the outer one, and all eight violet edges are the same length. The six lopsided boxes between them are cubes too. Count them: one inside, one outside, six in between. Eight.
+
+  </Step>
+  <Step>
+
+  **Turn it in <span class="axis-3">w</span>.** Move the xw slider to turn the tesseract in the plane of <span class="axis-0">x</span> and <span class="axis-3">w</span>. The inner cube swells and the outer one shrinks; halfway there, nothing is inside anything.
+
+  After a quarter turn you have a cube inside a cube again, but a different pair, and now the red edges are the ones joining inside to outside. "Inside" was never a property of the tesseract, only of where you are looking from. Drag the drawing sideways to turn it as you would a cube.
+
+  </Step>
+</Scrolly>
+
+<Deeper title="How many faces does a cube of any dimension have?">
+
+Each $k$-dimensional face of the $n$-dimensional cube comes from two choices. First pick which $k$ of the $n$ directions the face spreads out along: there are $\binom{n}{k}$ ways. Along each of the remaining $n-k$ directions, the face has to sit at one end or the other: $2^{n-k}$ ways. So
+
+$$
+f(n,k) = \binom{n}{k}\,2^{\,n-k}.
+$$
+
+For the tesseract ($n=4$) that gives $4 \times 8 = 32$ edges, $6 \times 4 = 24$ squares and $4 \times 2 = 8$ cubes.
+
+The table's pattern is hiding in here too. After one drag, every $k$-dimensional face either belongs to the original or the copy, or was swept out by a $(k-1)$-dimensional face as it moved:
+
+$$
+f(n,k) = 2\,f(n-1,k) + f(n-1,k-1).
+$$
+
+That is Pascal's triangle with a factor of 2 on one side.
+
+</Deeper>
+
+## Turning it around
+
+<SquareSays>I followed every step and I could count every piece. I just cannot point to your z.</SquareSays>
+
+What you feel about <span class="axis-3">w</span> is exactly what A Square feels about <span class="axis-2">z</span>: the rules are perfectly clear, and the direction is nowhere to be found. You can draw a tesseract because you flatten it into your own space, just as A Square could draw a cube in perspective on his paper.
+
+Now turn the question around. All chapter long you stood outside, looking down as each shape was built. A Square has no "down" to look from. If something from Spaceland, a sphere say, passed through his plane, what would he see? How would he describe a thing he can never step back and look at?
+
+In the next chapter, the Sphere pays Flatland a visit.
