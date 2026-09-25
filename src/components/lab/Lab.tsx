@@ -110,6 +110,8 @@ export default function Lab({ locale }: { locale: Locale }) {
   const canvasBind = useMemo(
     () => ({
       ...bind,
+      // Keyboard-operable, so not a plain image (PaperCanvas spreads bind after its role).
+      role: 'application',
       tabIndex: 0,
       onKeyDown: (e: React.KeyboardEvent) => {
         const step = e.shiftKey ? 60 : 20;
