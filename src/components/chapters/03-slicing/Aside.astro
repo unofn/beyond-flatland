@@ -1,0 +1,49 @@
+---
+/**
+ * A boxed sidebar that stays open in the text flow (unlike <Deeper>), for a
+ * point the reader should not miss.
+ *
+ *   <Aside label="Aside" title="w is not time"> … </Aside>
+ */
+interface Props {
+  label: string;
+  title: string;
+}
+const { label, title } = Astro.props;
+---
+
+<aside class="s03-aside">
+  <p class="s03-aside__head"><span class="s03-aside__label">{label}</span><span class="s03-aside__title">{title}</span></p>
+  <div class="s03-aside__body"><slot /></div>
+</aside>
+
+<style is:global>
+  .s03-aside {
+    margin: var(--space-4) 0;
+    padding: var(--space-2) var(--space-3) var(--space-3);
+    border-top: 2px solid var(--axis-3);
+    border-bottom: 1px solid var(--ink-faint);
+    background: color-mix(in oklab, var(--fill-3) 35%, var(--paper));
+    font-size: 0.94em;
+  }
+  .s03-aside__head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.7em;
+    margin-bottom: var(--space-2);
+  }
+  .s03-aside__label {
+    font-style: italic;
+    color: var(--axis-3);
+  }
+  :lang(zh) .s03-aside__label {
+    font-style: normal;
+  }
+  .s03-aside__title {
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .s03-aside__body > :last-child {
+    margin-bottom: 0;
+  }
+</style>
