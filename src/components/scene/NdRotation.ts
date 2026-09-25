@@ -59,6 +59,15 @@ export class NdRotation {
     this.version++;
   }
 
+  private lastTickAt = -1;
+
+  /** Advance at most once per frame time, however many objects call it. */
+  tickAt(time: number, dt: number) {
+    if (time === this.lastTickAt) return;
+    this.lastTickAt = time;
+    this.tick(dt);
+  }
+
   tick(dt: number) {
     if (!this.playing) return;
     let changed = false;
@@ -75,6 +84,7 @@ export class NdRotation {
     }
   }
 
+  /** Resets the drag view and accumulated spin. Slider `angles` belong to the caller: zero them there. */
   reset() {
     this.view = this.initialView;
     this.spinMat = identity(this.n);

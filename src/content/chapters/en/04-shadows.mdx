@@ -1,0 +1,97 @@
+---
+title: Shadows
+subtitle: 'A second way to see four dimensions: projection'
+order: 4
+summary: Cast a cube's shadow on a wall, then cast a tesseract's shadow into our space and turn it in all six planes.
+depth: 3
+---
+
+import CubeShadow from '../../../components/chapters/04-shadows/CubeShadow';
+import TesseractShadow from '../../../components/chapters/04-shadows/TesseractShadow';
+
+In the last chapter you pushed a tesseract through our space and saw it one cross-section at a time. A slice is honest: everything it shows you is really there. But it hands you one piece at a time, and the whole is left for you to assemble in your head.
+
+This chapter takes the opposite approach. Instead of cutting the object, we shine a light on it. A shadow gives you the whole thing at once. The price is distortion, and the skill is learning to read it.
+
+## A cube under a lamp
+
+Start in familiar territory: a lamp, a cube bent out of wire, and a wall. One side of the figure shows the scene from the side; the other shows the wall face on, with the shadow on it.
+
+<Plate caption="A lamp, a wire cube, and its shadow on the wall" ratio="1">
+  <CubeShadow client:only="react" locale="en" />
+</Plate>
+
+Bring the lamp in as close as it will go. The face nearest the lamp throws a large square; the face farther away throws a small one. The four edges that point toward the lamp become four slanting lines joining the corners. A square inside a square.
+
+Now push the lamp away, all the way to the end of the slider, until it becomes the sun. The rays grow parallel, the two squares creep toward the same size, and finally they coincide. The direction toward the light has vanished from the shadow altogether.
+
+Turn the cube with the <span class="axis-0">x</span><span class="axis-2">z</span> and <span class="axis-1">y</span><span class="axis-2">z</span> sliders. The squares in the shadow stretch into trapezoids and parallelograms, and the edges no longer match in length. Yet nothing about the cube has changed: every edge is as long as ever, every corner still square. The distortion belongs to the shadow, not to the cube.
+
+<SquareSays>I know this picture: a small square inside a large one, corner tied to corner. In Flatland I would have called it an odd figure with eight vertices. Now I see that the small square is not small. It is far away.</SquareSays>
+
+That is the only way a Flatlander can ever look at a cube: through its shadow on the plane, learning to read "small" as "far" and "skewed" as "turned away". It is also the only way we can look at a tesseract.
+
+## The tesseract's shadow
+
+Now go up one dimension. Picture a lamp out along the fourth direction, <span class="axis-3">w</span>, some distance from our space. A tesseract hangs between the lamp and us, and its shadow falls into our three-dimensional space the way the cube's shadow fell on the wall. This time the shadow is a solid.
+
+<Scrolly id="tesseract">
+  <Plate slot="figure" fill caption="The tesseract's shadow, cast into our space">
+    <TesseractShadow client:only="react" locale="en" scrolly="tesseract" />
+  </Plate>
+  <Step>
+
+  Here is the tesseract's shadow: a small cube inside a large one, with eight violet <span class="axis-3">w</span> edges joining corner to corner. It works just like the square inside a square. The small cube is the cell far from the lamp; the large one is the cell near it.
+
+  The six squashed, flat-topped pyramids between them are cubes too, just as the four trapezoids on the wall were really square faces. Eight cells, all present. Drag the figure, or use the xy, xz and yz sliders: it turns like any solid, and the small cube stays inside.
+
+  </Step>
+  <Step>
+
+  Now turn it in a new plane: <span class="axis-0">x</span><span class="axis-3">w</span>. Keep scrolling and the figure will turn for you. The bold cube is the one that started on the inside.
+
+  Watch it grow and push out through one side of the large cube, while the large cube shrinks and retreats inward. After half a turn the picture looks exactly as it began, but inside and outside have swapped: the bold cube is now on the outside.
+
+  </Step>
+  <Step>
+
+  Why? Go back to the cube. With the lamp close, turn it in the <span class="axis-0">x</span><span class="axis-2">z</span> plane, where <span class="axis-2">z</span> is the direction toward the lamp. The small square at the back swings out to one side and round to the front, where it becomes the large square.
+
+  The tesseract does the same, with <span class="axis-3">w</span> as the direction toward the lamp. Try <span class="axis-1">y</span><span class="axis-3">w</span> and <span class="axis-2">z</span><span class="axis-3">w</span> as well: the far cell swings round to the near side by two other routes. Nothing passes through anything. The tesseract stays perfectly rigid; only its shadow deforms.
+
+  </Step>
+  <Step>
+
+  You can change the light, too. Press ↺ to reset, then choose Sun. With parallel rays the inner and outer cubes merge into one. The <span class="axis-3">w</span> direction disappears from the shadow entirely, just as a cube facing the sun casts a single square.
+
+  Switch back to Lamp and drag its distance. The nearer the lamp, the more the two cubes differ in size; the farther, the closer they come.
+
+  </Step>
+  <Step>
+
+  The same lamp works on other four-dimensional shapes. The 5-cell, the simplest of them all, is bounded by five tetrahedra. The 16-cell is bounded by sixteen tetrahedra. The 24-cell is bounded by twenty-four octahedra, and it has no counterpart among the regular solids of our space.
+
+  Pick one and turn it in its <span class="axis-3">w</span> planes. Each time the shadow changes; the shape never does.
+
+  </Step>
+</Scrolly>
+
+What you see on the screen is really a shadow of a shadow: four dimensions cast into three, then three cast onto your flat screen. Your eyes learned to read the second step long ago. This chapter is practice for the first.
+
+<Deeper title="The shadow formula">
+
+Put the lamp on the <span class="axis-3">w</span> axis at distance $d$ from the origin, and let our space be the slice $w = 0$. The point $(x, y, z, w)$ casts its shadow at
+
+$$
+x' = \frac{d}{d-w}\,x,\qquad y' = \frac{d}{d-w}\,y,\qquad z' = \frac{d}{d-w}\,z.
+$$
+
+The larger $w$, the closer the point is to the lamp, the bigger the factor, and the bigger its shadow: that is the outer cube. Points with negative $w$ are farther from the lamp and shrink inward. Let $d$ grow without limit and the factor tends to 1; the formula simply erases $w$. That is the parallel projection of sunlight.
+
+The cube's shadow on the wall uses the same formula with $z$ in place of $w$. (In the figure the wall stands behind the cube, which enlarges the whole shadow a little.)
+
+</Deeper>
+
+<SquareSays>When inside and outside swapped, I thought it had been turned inside out. It had not bent, nor passed through itself. It had only turned round. The shadow did the rest.</SquareSays>
+
+Slices and shadows each pay a price. A slice is exact but gives you one piece at a time; a shadow gives you everything but bends it. The next chapter tries a third way: unfolding. Just as a cardboard box can be cut open and laid flat as a cross, a tesseract can be opened out into eight cubes, laid out in our space.
