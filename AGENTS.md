@@ -82,7 +82,7 @@ Read the source; these are summaries.
 - `<SectionView section color fill>` renders a `slice()` result.
 - `<InkSegments positions colors width>` / `useInkSegments` for custom pen strokes.
 - `<Canvas2D draw animate label>` crisp 2D canvas; `draw({ ctx, width, height, time, dt, tokens })`.
-  Keep `draw` stable (`useCallback`) or it re-subscribes every render.
+  A static canvas redraws when `draw` changes identity; animated ones read the latest `draw` each frame.
 - `useTokens()` resolved colours; `axisColor(tokens, i)`; `useReducedMotion()`.
 
 **Controls** `src/components/ui`: `Slider` (with `axis` tint), `Segmented`, `Button`,
