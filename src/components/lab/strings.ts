@@ -17,6 +17,7 @@ export const s = defineStrings({
     dimension: '维度',
     only4d: '只存在于四维',
     counts: '{v} 个顶点 · {e} 条棱 · {f} 个面',
+    countsFlat: '{v} 个顶点 · {e} 条棱 · 1 个面',
 
     view: '看法',
     viewKind: '看法',
@@ -114,6 +115,7 @@ export const s = defineStrings({
     dimension: 'Dimension',
     only4d: 'exists only in four dimensions',
     counts: '{v} vertices · {e} edges · {f} faces',
+    countsFlat: '{v} vertices · {e} edges · 1 face',
 
     view: 'View',
     viewKind: 'View',

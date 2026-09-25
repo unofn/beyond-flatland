@@ -293,7 +293,7 @@ export default function Lab({ locale }: { locale: Locale }) {
               )}
             </div>
             <p className="lab-note">
-              <span className="lab-name">{name}</span> · {fill(str.counts, { v, e, f })}
+              <span className="lab-name">{name}</span> · {fill(f === 1 ? str.countsFlat : str.counts, { v, e, f })}
             </p>
           </Group>
 
@@ -400,7 +400,7 @@ export default function Lab({ locale }: { locale: Locale }) {
 
           <Group title={str.rotation} id={`${uid}-rot`}>
             <div className="lab-actions">
-              <Button onClick={onPlay} aria-pressed={playing}>
+              <Button onClick={onPlay}>
                 {playing ? str.pause : str.play}
               </Button>
               <Button onClick={resetRotation}>{str.resetRotation}</Button>

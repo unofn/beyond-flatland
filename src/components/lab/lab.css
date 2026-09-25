@@ -3,6 +3,7 @@
 
 .lab {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-3);
   padding: 0 var(--gutter) var(--space-4);
   font-size: var(--step--1);
@@ -176,11 +177,6 @@
   flex-wrap: wrap;
   gap: var(--space-1) var(--space-2);
 }
-.lab-actions .ctl-button[aria-pressed='true'] {
-  color: var(--paper);
-  background: var(--ink);
-  border-color: var(--ink);
-}
 
 .lab-planes {
   border-top: 1px dotted var(--ink-faint);
@@ -199,6 +195,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-1);
+  margin-bottom: 3px;
 }
 .lab-panel .ctl-slider {
   /* Slider is flex: 1 1 12em for a row; in these columns that would be its height. */
@@ -242,7 +239,8 @@
   .lab-stage {
     position: sticky;
     top: var(--space-2);
-    height: calc(100dvh - 2 * var(--space-2));
+    /* Leaves room for the page header on first view, caption included. */
+    height: calc(100dvh - 9rem);
     min-height: 26rem;
   }
 }
