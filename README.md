@@ -1,9 +1,57 @@
 # Beyond Flatland 超越平面国
 
-An interactive, bilingual explorable book about dimensions. See `AGENTS.md`
-(also linked as `CLAUDE.md`) for the structure, conventions and ownership rules.
+An interactive, bilingual (中文 / English) explorable book about dimensions:
+from a point to a tesseract, up to twelve dimensions, and finally to the
+high-dimensional spaces of data. See `AGENTS.md` (also linked as `CLAUDE.md`)
+for the structure, conventions and ownership rules.
 
 ```
 pnpm install
-pnpm dev
+pnpm dev            # http://localhost:4321/zh/  (draft kit page: /zh/kit/)
+pnpm verify         # typecheck + unit tests + production build
+pnpm build && pnpm preview
+pnpm shots --base http://localhost:4321   # Playwright device screenshots into shots/
 ```
+
+## Contents
+
+| Route | What it is |
+|---|---|
+| `/zh/`, `/en/` | Cover (A Square's Flatland, edge-on then from above) and contents |
+| `/<locale>/extrusion/` | 1 · Drag a point into a line, square, cube, tesseract; count the parts |
+| `/<locale>/flatland/` | 2 · A Square's one-dimensional view; the Sphere visits |
+| `/<locale>/slicing/` | 3 · A tesseract passing through our space; w is not time |
+| `/<locale>/shadows/` | 4 · Shadows of a cube and of a tesseract; the six rotation planes |
+| `/<locale>/unfolding/` | 5 · Folding a cube, and Dalí's net of eight cubes in 4D |
+| `/<locale>/beyond-four/` | 6 · Up to 12 dimensions: Petrie projections, the vanishing ball, crowded corners |
+| `/<locale>/data/` | 7 · Data as points in high dimensions; PCA as the best shadow |
+| `/<locale>/lab/` | Laboratory: every parameter unlocked, shareable via URL |
+
+## Known issues
+
+- **Touch gestures are untested on real devices.** Horizontal drag rotates and
+  vertical swipe scrolls (`touch-action: pan-y`); verified only by emulation.
+- **Axis colours and colour-vision deficiency.** Under deuteranopia the x (red)
+  and y (dark yellow) strokes are hard to tell apart, and in dark mode some axis
+  colours fall outside the dataviz palette's lightness band. Figures label axes
+  in text, which mitigates it; a proper fix is a token change in
+  `src/styles/tokens.css` checked against every chapter.
+- **Axis colouring only means something for hypercubes.** For simplices,
+  cross-polytopes and the 24-cell, `edgeAxes` picks a dominant axis somewhat
+  arbitrarily (chapter 4 and the lab use plain ink or accept this).
+- **Chapter-local renderers.** Chapters 1, 3, 5 and the lab draw with their own
+  renderers on top of `useInkSegments` (vertex dots, orbitable sections,
+  per-cell colours). The shared `NdObject` now supports most of this
+  (`vertexSize`, `edgeColors`, `faceColors`, `preKey`); migrating is optional.
+  `SectionView` still lacks drag rotation and depth fading (chapter 3's
+  `InkSection` has them).
+- **Lab:** the URL drops `n` for the 24-cell; the "cut at" range ignores
+  accumulated spin, so a spinning section can go empty.
+- **Phones:** in figures with two slider rows (end of chapter 1, chapter 3,
+  chapter 2's triple view) the drawing area is small (~180–240 px tall).
+- **Chinese justification:** a line that must fit an unbreakable number such as
+  "52%" gets wide gaps between characters.
+- **Build warnings:** `MODULE_LEVEL_DIRECTIVE` warnings for MDX files with
+  imports come from Astro/Rolldown and are harmless.
+- **Deployment:** `site` in `astro.config.mjs` is a placeholder
+  (`beyond-flatland.pages.dev`); nothing is deployed.
