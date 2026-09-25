@@ -67,8 +67,11 @@
 
 .ctl-seg {
   display: inline-flex;
+  flex-wrap: wrap;
+  max-width: 100%;
   border: 1px solid var(--ink-faint);
   border-radius: var(--radius-control);
+  overflow: hidden;
 }
 .ctl-seg button {
   font: inherit;
@@ -79,8 +82,9 @@
   min-height: 32px;
   cursor: pointer;
 }
-.ctl-seg button + button {
-  border-left: 1px solid var(--ink-faint);
+.ctl-seg button {
+  flex: 1 0 auto;
+  box-shadow: -1px 0 0 var(--ink-faint), 0 -1px 0 var(--ink-faint); /* hairlines that survive wrapping */
 }
 .ctl-seg button[aria-pressed='true'] {
   color: var(--paper);
