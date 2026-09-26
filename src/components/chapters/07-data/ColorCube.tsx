@@ -54,7 +54,9 @@ export default function ColorCube({ locale }: { locale: Locale }) {
   const { rot, bind } = useNdRotation({ n: 3 });
 
   const draw = useCallback(
-    ({ ctx, width, height, tokens }: Draw2DContext) => {
+    ({ ctx, width, height, tokens, dt }: Draw2DContext) => {
+      // Lets a flicked drag coast to a stop (inertia lives in NdRotation.tick).
+      rot.tick(Math.min(dt, 0.05));
       const m = rot.matrix();
       const sc = Math.min(width, height) / 2 / 2.05;
       const cx = width / 2;

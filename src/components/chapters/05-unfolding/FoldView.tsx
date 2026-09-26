@@ -78,8 +78,10 @@ export function FoldView({
   target.current = angle;
   const lastKey = useRef('');
 
-  useFrame((_, dt) => {
+  useFrame((state, dt) => {
     if (!tokens) return;
+    // Lets a flicked drag coast to a stop (inertia lives in NdRotation.tick).
+    rotation.tickAt(state.clock.elapsedTime, Math.min(dt, 0.05));
     const goal = target.current;
     const diff = goal - shown.current;
     shown.current = snap || Math.abs(diff) < 1e-4 ? goal : shown.current + diff * (1 - Math.exp(-Math.min(dt, 0.1) * 6));
