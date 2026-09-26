@@ -1,0 +1,29 @@
+---
+/**
+ * Dev-only style comparison (/zh/styles/). Not generated in production builds.
+ * Loads the candidate fonts from CDNs just for this page.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import StyleCompare from '../../components/styles-lab/StyleCompare';
+import type { Locale } from '../../i18n/locales';
+
+export function getStaticPaths() {
+  return import.meta.env.DEV ? [{ params: { locale: 'zh' }, props: { locale: 'zh' } }] : [];
+}
+const { locale } = Astro.props as { locale: Locale };
+---
+
+<BaseLayout locale={locale} title="风格对比" description="界面风格对比（仅开发环境）" bare>
+  <Fragment slot="head">
+    <meta name="robots" content="noindex" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600&family=Literata:ital,opsz,wght@0,7..72,400..600;1,7..72,400&family=Figtree:wght@400..700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600&display=swap"
+    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/lxgwwenkai-regular.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/lxgwwenkai-bold.css" />
+  </Fragment>
+  <StyleCompare client:only="react" />
+</BaseLayout>
