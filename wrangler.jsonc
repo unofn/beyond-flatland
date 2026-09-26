@@ -4,6 +4,9 @@
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "beyond-flatland",
   "compatibility_date": "2026-09-20",
+  // No per-version preview URLs (e.g. polish-beyond-flatland…). Set true to
+  // share a preview again: wrangler versions upload --preview-alias <name>
+  "preview_urls": false,
   "assets": {
     "directory": "./dist",
     // /zh/slicing/ style URLs, as Astro builds them.
