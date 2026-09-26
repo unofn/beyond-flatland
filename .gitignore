@@ -26,3 +26,6 @@ pnpm-debug.log*
 # agent worktrees
 .claude/worktrees/
 shots/
+
+# wrangler
+.wrangler/

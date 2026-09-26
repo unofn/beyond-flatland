@@ -13,6 +13,18 @@ pnpm build && pnpm preview
 pnpm shots --base http://localhost:4321   # Playwright device screenshots into shots/
 ```
 
+## Deployment
+
+Live at **https://beyond-flatland.unofn.workers.dev** (Cloudflare Workers Static
+Assets, config in `wrangler.jsonc`).
+
+Every push to `main` runs `.github/workflows/deploy.yml`: install, `pnpm verify`
+(typecheck, tests, build), then `wrangler deploy` of `dist/`. A red check means
+nothing was deployed. Pull requests are verified but not deployed. The workflow
+needs two repository secrets: `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN`
+(a token from the "Edit Cloudflare Workers" template). Manual deploy from a
+logged-in machine: `pnpm build && pnpm exec wrangler deploy`.
+
 ## Contents
 
 | Route | What it is |
@@ -46,5 +58,3 @@ pnpm shots --base http://localhost:4321   # Playwright device screenshots into s
   "52%" gets wide gaps between characters.
 - **Build warnings:** `MODULE_LEVEL_DIRECTIVE` warnings for MDX files with
   imports come from Astro/Rolldown and are harmless.
-- **Deployment:** `site` in `astro.config.mjs` is a placeholder
-  (`beyond-flatland.pages.dev`); nothing is deployed.

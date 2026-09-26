@@ -1,0 +1,12 @@
+{
+  // Static site served by Cloudflare Workers Static Assets.
+  // Deployed by .github/workflows/deploy.yml on every push to main.
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "beyond-flatland",
+  "compatibility_date": "2026-09-20",
+  "assets": {
+    "directory": "./dist",
+    // /zh/slicing/ style URLs, as Astro builds them.
+    "html_handling": "force-trailing-slash"
+  }
+}
