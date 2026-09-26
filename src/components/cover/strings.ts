@@ -15,7 +15,7 @@ export const coverStrings = defineStrings({
     colophon1: '本书的设想来自埃德温·A·阿博特的《平面国：一个多维的传奇》（1884），用色取自奥利弗·伯恩的《欧几里得几何原本前六卷》（1847）。',
     colophon2: '全书以中文和英文各写一遍，两个版本各自成文。',
     otherEdition: '阅读英文版',
-    colophon3: '正文字体为 Libre Caslon 与思源宋体。',
+    colophon3: '正文字体为霞鹜文楷与 Newsreader，标题为思源宋体。',
     heroLabel:
       '平面国的一角：正方形先生、一座五边形的房子（屋里有个六边形）、一个等腰三角形、一个圆和一个五边形。画面先从平面之内看，只有一条线；随后视线升到平面上方，俯看整个平面。',
     captionLine: '正方形先生眼中的世界：一条线，近处浓，远处淡。',
@@ -40,7 +40,7 @@ export const coverStrings = defineStrings({
       'The premise comes from Edwin A. Abbott’s *Flatland: A Romance of Many Dimensions* (1884); the colours from Oliver Byrne’s *The First Six Books of the Elements of Euclid* (1847).',
     colophon2: 'The book is written twice, in English and in Chinese, each text on its own terms.',
     otherEdition: 'Read the Chinese edition',
-    colophon3: 'Set in Libre Caslon and Noto Serif SC.',
+    colophon3: 'Set in Newsreader and LXGW WenKai, with headings in Noto Serif SC.',
     heroLabel:
       'A corner of Flatland: A Square, a pentagonal house with a hexagon inside, an isosceles triangle, a circle and a pentagon. It is first seen from within the plane, as a single line; then the view rises above the plane and looks down on it.',
     captionLine: 'What A Square sees: a single line, darker where things are near, fainter where they are far.',

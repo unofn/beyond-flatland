@@ -174,18 +174,18 @@ const css = `
 .s03-first > span { color: var(--ink-soft); }
 .s03-stage { position: absolute; inset: 0; container-type: size; }
 .s03-inset {
-  position: absolute; left: 0; bottom: 0; width: min(30cqw, 42cqh, 170px);
+  position: absolute; left: 6px; bottom: 6px; width: min(30cqw, 42cqh, 170px);
   display: flex; flex-direction: column; gap: 2px;
   pointer-events: none;
 }
 .s03-inset__art {
   position: relative; aspect-ratio: 1;
-  border-top: 1px solid var(--ink-faint); border-right: 1px solid var(--ink-faint);
+  border-radius: 10px;
   background: var(--paper);
 }
 .s03-inset__cap {
-  padding-right: 4px;
-  font-size: 11px; line-height: 1.25; color: var(--ink-soft);
+  padding: 0 4px;
+  font-size: 12px; line-height: 1.25; color: var(--ink-soft);
 }
 .s03-short { display: none; }
 /* Phones: one row of controls, so the drawing keeps the height. The group's

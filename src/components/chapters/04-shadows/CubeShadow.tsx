@@ -49,7 +49,7 @@ const Y = 2.3;
 /** Wall view half-width in world units. */
 const R = 4;
 
-const FONT = "12px 'Libre Caslon Text', 'Noto Serif SC', 'Songti SC', serif";
+const FONT = "13px 'Newsreader Variable', 'LXGW WenKai', serif";
 
 interface Rect {
   x: number;

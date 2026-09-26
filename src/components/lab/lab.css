@@ -23,7 +23,9 @@
   flex: 1;
   min-height: 0;
   border: var(--plate-border);
+  border-radius: var(--radius-card);
   background: var(--plate-bg);
+  overflow: hidden;
 }
 .lab-canvas > div:focus-visible {
   outline: 2px solid var(--focus);
@@ -215,18 +217,24 @@
   padding: 0;
   color: var(--ink-faint);
   background: transparent;
-  border: 1px solid var(--ink-faint);
+  border: 0;
   border-radius: var(--radius-control);
   cursor: pointer;
+  transition:
+    background-color 150ms var(--ease),
+    color 150ms var(--ease),
+    transform 120ms var(--ease);
 }
 .lab-spin:hover {
   color: var(--ink);
-  border-color: var(--ink);
+  background: color-mix(in oklab, var(--ink) 7%, transparent);
+}
+.lab-spin:active {
+  transform: scale(0.94);
 }
 .lab-spin[aria-pressed='true'] {
-  color: var(--paper);
-  background: var(--ink);
-  border-color: var(--ink);
+  color: var(--ink);
+  background: color-mix(in oklab, var(--ink) 14%, transparent);
 }
 
 /* Desktop: drawing on the left, pinned; the panel scrolls with the page. */

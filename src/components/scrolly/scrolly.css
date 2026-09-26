@@ -35,13 +35,18 @@
 }
 
 .step {
-  min-height: 70svh;
-  opacity: 0.45;
-  transition: opacity 240ms ease;
+  min-height: 60svh;
+  opacity: 0.6;
+  padding-left: 1em;
+  border-left: 2px solid transparent;
+  transition:
+    opacity 400ms var(--ease),
+    border-color 400ms var(--ease);
 }
 
 .step.is-active {
   opacity: 1;
+  border-left-color: var(--accent);
 }
 
 .step > :last-child {
@@ -64,7 +69,7 @@
     padding: var(--space-1) var(--gutter);
     background: var(--paper);
     z-index: 2;
-    border-bottom: var(--rule);
+    box-shadow: 0 1px 0 var(--paper-edge);
   }
 
   .scrolly__steps {

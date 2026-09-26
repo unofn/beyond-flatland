@@ -29,6 +29,12 @@ export class NdRotation {
   anglesMat: Mat;
   spin: Partial<Record<PlaneKey, number>>;
   playing = false;
+  /** Release velocity in px/ms; decays in tick() so a flicked object coasts to a stop. */
+  private vx = 0;
+  private vy = 0;
+  dragging = false;
+  private reducedMotion =
+    typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   private initialView: Mat;
   version = 0;
 
@@ -54,6 +60,20 @@ export class NdRotation {
     this.version++;
   }
 
+  /** Called on pointer release with the recent drag velocity (px/ms). */
+  release(vx: number, vy: number) {
+    this.dragging = false;
+    if (this.reducedMotion) return;
+    this.vx = vx;
+    this.vy = vy;
+  }
+
+  /** Stop any coasting, e.g. on pointer down or reset. */
+  hold() {
+    this.vx = 0;
+    this.vy = 0;
+  }
+
   rotatePlane(plane: Plane, theta: number) {
     this.spinMat = rotateInPlace(this.spinMat, plane[0], plane[1], theta);
     this.version++;
@@ -69,6 +89,13 @@ export class NdRotation {
   }
 
   tick(dt: number) {
+    // Inertia runs whether or not the spin is playing.
+    if (!this.dragging && (Math.abs(this.vx) > 0.003 || Math.abs(this.vy) > 0.003)) {
+      this.drag(this.vx * dt * 1000, this.vy * dt * 1000);
+      const k = Math.exp(-dt * 3.2);
+      this.vx *= k;
+      this.vy *= k;
+    }
     if (!this.playing) return;
     let changed = false;
     for (const [key, speed] of Object.entries(this.spin)) {
@@ -86,6 +113,7 @@ export class NdRotation {
 
   /** Resets the drag view and accumulated spin. Slider `angles` belong to the caller: zero them there. */
   reset() {
+    this.hold();
     this.view = this.initialView;
     this.spinMat = identity(this.n);
     this.version++;
@@ -134,25 +162,44 @@ export function useNdRotation(opts: NdRotationOptions & { autoplay?: boolean }) 
     if (opts.autoplay && !reduced) setPlaying(true);
   }, [opts.autoplay, setPlaying]);
 
-  const last = useRef<{ x: number; y: number; id: number; touch: boolean } | null>(null);
+  const last = useRef<{ x: number; y: number; t: number; id: number; touch: boolean; vx: number; vy: number } | null>(
+    null,
+  );
   const bind = useMemo(
     () => ({
       style: { touchAction: 'pan-y', cursor: opts.n >= 3 ? 'grab' : undefined } as React.CSSProperties,
       onPointerDown: (e: React.PointerEvent) => {
-        last.current = { x: e.clientX, y: e.clientY, id: e.pointerId, touch: e.pointerType === 'touch' };
+        last.current = { x: e.clientX, y: e.clientY, t: performance.now(), id: e.pointerId, touch: e.pointerType === 'touch', vx: 0, vy: 0 };
+        rot.hold();
+        rot.dragging = true;
         (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
       },
       onPointerMove: (e: React.PointerEvent) => {
         const l = last.current;
         if (!l || l.id !== e.pointerId) return;
+        const now = performance.now();
         const dx = e.clientX - l.x;
         const dy = l.touch ? 0 : e.clientY - l.y;
+        const dtm = Math.max(now - l.t, 1);
+        // Smoothed velocity, so a flick keeps the object turning after release.
+        l.vx = l.vx * 0.6 + (dx / dtm) * 0.4;
+        l.vy = l.vy * 0.6 + (dy / dtm) * 0.4;
         l.x = e.clientX;
         l.y = e.clientY;
+        l.t = now;
         rot.drag(dx, dy);
       },
-      onPointerUp: () => (last.current = null),
-      onPointerCancel: () => (last.current = null),
+      onPointerUp: () => {
+        const l = last.current;
+        // A pause before release means "put it down", not "flick".
+        if (l && performance.now() - l.t < 80) rot.release(l.vx, l.vy);
+        else rot.release(0, 0);
+        last.current = null;
+      },
+      onPointerCancel: () => {
+        rot.release(0, 0);
+        last.current = null;
+      },
     }),
     [rot, opts.n],
   );

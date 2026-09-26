@@ -1,11 +1,12 @@
 import { useFrame } from '@react-three/fiber';
 import { useEffect, useMemo, useRef } from 'react';
 import { BufferAttribute, BufferGeometry, DoubleSide, MeshBasicMaterial, Mesh } from 'three';
-import { type Polytope, type Vec, type ProjectionMode, apply, edgeAxes, projectTo, resize } from '../../lib/nd';
+import { type Polytope, type Vec, type ProjectionMode, apply, edgeAxes, resize } from '../../lib/nd';
 import { useInkSegments } from './InkSegments';
 import { axisColor, useTokens } from './useTokens';
 import type { NdRotation } from './NdRotation';
 import { rgb } from './color';
+import { useReducedMotion } from './useReducedMotion';
 
 export interface NdObjectProps {
   poly: Polytope;
@@ -96,6 +97,9 @@ export function NdObject({
     (faceMesh.material as MeshBasicMaterial).dispose();
   }, [faceMesh]);
 
+  const reduced = useReducedMotion();
+  // 1 = perspective, 0 = orthographic; eased so switching modes morphs instead of jumping.
+  const persp = useRef((projection?.mode ?? 'perspective') === 'perspective' ? 1 : 0);
   const lastKey = useRef('');
   const lastPoly = useRef<Polytope | null>(null);
 
@@ -103,7 +107,10 @@ export function NdObject({
     if (!tokens) return;
     // Several objects may share one rotation; it advances once per frame.
     rotation.tickAt(state.clock.elapsedTime, Math.min(dt, 0.05));
-    const key = `${rotation.version}|${depth}|${tokens.ink}|${edgeOpacity?.join(',')}|${projection?.mode}|${projection?.distance}|${scale}|${color}|${edgeColors?.join(',')}|${faceColors?.join(',')}|${vertexSize}|${pre ? (preKey ?? Math.random()) : ''}`;
+    const target = (projection?.mode ?? 'perspective') === 'perspective' ? 1 : 0;
+    if (reduced || Math.abs(target - persp.current) < 1e-3) persp.current = target;
+    else persp.current += (target - persp.current) * (1 - Math.exp(-dt * 9));
+    const key = `${persp.current.toFixed(4)}|${rotation.version}|${depth}|${tokens.ink}|${edgeOpacity?.join(',')}|${projection?.mode}|${projection?.distance}|${scale}|${color}|${edgeColors?.join(',')}|${faceColors?.join(',')}|${vertexSize}|${pre ? (preKey ?? Math.random()) : ''}`;
     if (key === lastKey.current && poly === lastPoly.current) return;
     lastKey.current = key;
     lastPoly.current = poly;
@@ -121,7 +128,14 @@ export function NdObject({
       const r = apply(m, v);
       let f = 1;
       if (wCue) f *= 0.7 + 0.3 * Math.min(1, Math.max(0, (r[3]! + 1.4) / 2.8));
-      const p3 = n > 3 ? projectTo(r, 3, { mode: projection?.mode ?? 'perspective', distance: dist }) : resize(r, 3);
+      let p3 = r;
+      while (p3.length > 3) {
+        // Drop the last axis, blending the perspective shrink by persp.current.
+        const w = p3[p3.length - 1]!;
+        const k = 1 + (dist / Math.max(dist - w, 1e-3) - 1) * persp.current;
+        p3 = p3.slice(0, -1).map((x) => x * k);
+      }
+      p3 = resize(p3, 3);
       if (depth >= 2) f *= 0.55 + 0.45 * Math.min(1, Math.max(0, (p3[2]! + 1.8) / 3.6));
       projected.push(p3.map((x) => x * scale));
       fade.push(f);

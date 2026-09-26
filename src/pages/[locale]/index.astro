@@ -180,7 +180,7 @@ const cite = (text: string) => text.replace(/\*([^*]+)\*/g, '<cite>$1</cite>');
     text-align: center;
   }
   .cover__title h1 {
-    font-size: clamp(3rem, 9vw, 6.5rem);
+    font-size: clamp(2.75rem, 8vw, 5.25rem);
     line-height: 1.02;
     letter-spacing: -0.01em;
   }
@@ -217,13 +217,20 @@ const cite = (text: string) => text.replace(/\*([^*]+)\*/g, '<cite>$1</cite>');
     margin-top: var(--space-2);
     padding: 0.5em 1.4em;
     min-height: 44px;
-    border: 1px solid var(--ink);
     border-radius: var(--radius-control);
+    background: color-mix(in oklab, var(--ink) 7%, transparent);
     text-decoration: none;
     font-size: var(--step-0);
+    transition:
+      background-color 150ms var(--ease),
+      transform 120ms var(--ease);
   }
   .cover__begin:hover {
-    border-color: var(--accent);
+    color: inherit;
+    background: color-mix(in oklab, var(--ink) 13%, transparent);
+  }
+  .cover__begin:active {
+    transform: scale(0.97);
   }
 
   /* Contents */
@@ -248,7 +255,13 @@ const cite = (text: string) => text.replace(/\*([^*]+)\*/g, '<cite>$1</cite>');
     grid-template-columns: 1.6em 3.25rem 1fr;
     gap: 0 var(--space-3);
     align-items: start;
-    padding: var(--space-2) 0;
+    padding: var(--space-2) 0.8em;
+    margin: 0 -0.8em;
+    border-radius: var(--radius-card);
+    transition: background-color 200ms var(--ease);
+  }
+  .toc__item:hover {
+    background: var(--card);
   }
   .toc__num {
     font-family: var(--font-display);
@@ -256,6 +269,7 @@ const cite = (text: string) => text.replace(/\*([^*]+)\*/g, '<cite>$1</cite>');
     line-height: 1.1;
     color: var(--ink-soft);
     text-align: right;
+    font-style: italic;
     font-variant-numeric: oldstyle-nums;
   }
   .toc__glyph {
@@ -278,7 +292,7 @@ const cite = (text: string) => text.replace(/\*([^*]+)\*/g, '<cite>$1</cite>');
     inset: 0;
   }
   .toc__item:hover .toc__link {
-    color: var(--accent);
+    color: inherit;
   }
   .toc__summary {
     margin: 0.25em 0 0;
@@ -294,6 +308,9 @@ const cite = (text: string) => text.replace(/\*([^*]+)\*/g, '<cite>$1</cite>');
     margin-top: var(--space-3);
     padding-top: var(--space-3);
     border-top: var(--rule);
+    /* Square top corners keep the separating rule straight. */
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
   }
   .toc__empty {
     text-align: center;

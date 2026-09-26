@@ -119,17 +119,24 @@ from `src/i18n/ui.ts` (missing keys are type errors).
 
 ## Visual language
 
-Victorian geometry printing: Oliver Byrne's 1847 Euclid and the 1884 Flatland.
-Laid paper, iron-gall ink, Byrne's red / yellow / blue. Libre Caslon + Noto Serif SC.
+A soft book: the 1884 Flatland and Oliver Byrne's 1847 Euclid, set for a screen.
+Laid paper, ink, Byrne's red / yellow / blue. Latin in Newsreader, Chinese body
+in LXGW WenKai (霞鹜文楷), Chinese headings in Noto Serif SC 600 (all self-hosted).
 
 - **Axis colours are law**: x red `--axis-0`, y yellow `--axis-1`, z blue `--axis-2`,
-  w violet `--axis-3`, higher axes ink grey. Use them in figures *and* in text
-  (`<span class="axis-3">w</span>`).
-- Lines are pen strokes, not glowing wires. No gradients, glow, drop shadows or neon.
-- One memorable thing per figure. Controls are hairline instruments beneath the drawing.
+  w violet `--axis-3`, higher axes ink grey. Use them in figures, and in text via
+  `<span class="axis-3">w</span>` (which uses the 4.5:1 `--axis-N-text` variants).
+  The palette is validated for colour blindness; re-run the validator if you touch it.
+- Lines are pen strokes, not glowing wires. No gradients, glow or neon.
+- Figures, asides and controls sit on soft cards (`--card`, `--radius-card`), not in
+  hairline boxes. Controls are translucent ink surfaces with hover and press feedback.
+- Motion answers the reader: drags coast to a stop (inertia in `NdRotation`),
+  mode switches ease (`NdObject` projection). Nothing moves on its own without a
+  Play button, and `prefers-reduced-motion` turns easing and inertia off.
+- Chinese text is set ragged-right (no justification gaps).
 - Figures must work at 360 px wide, by touch, with keyboard (sliders are native
-  inputs), with `prefers-reduced-motion` (no autoplay), and in dark mode (use tokens,
-  never hard-coded colours).
+  inputs), with `prefers-reduced-motion`, and in dark mode (use tokens,
+  never hard-coded colours or fonts; canvas text reads `--font-text`).
 - Every figure has an accessible `label` describing what it shows.
 
 ## Writing

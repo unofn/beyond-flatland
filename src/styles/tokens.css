@@ -56,21 +56,24 @@
   --focus: var(--byrne-blue);
 
   /* Type */
-  --font-text: 'Libre Caslon Text', 'Noto Serif SC', 'Songti SC', serif;
-  --font-display: 'Libre Caslon Display', 'Libre Caslon Text', 'Noto Serif SC', 'Songti SC', serif;
+  /* Latin in Newsreader (soft, screen-first serif with optical sizes); Chinese
+     body in LXGW WenKai (a warm kai with a hand behind it); Chinese headings in
+     Noto Serif SC at a lighter 600. */
+  --font-text: 'Newsreader Variable', 'LXGW WenKai', 'Kaiti SC', serif;
+  --font-display: 'Newsreader Variable', 'Noto Serif SC', 'Songti SC', serif;
   --font-cjk: 'Noto Serif SC', 'Songti SC', serif;
 
   /* Classic typographic scale (Bringhurst), in rem at 16px root. */
-  --step--1: 0.875rem; /* 14 captions, controls */
-  --step-0: 1.1875rem; /* 19 body */
+  --step--1: 0.9375rem; /* 15 captions, controls */
+  --step-0: 1.125rem; /* 18 body */
   --step-1: 1.3125rem; /* 21 */
   --step-2: 1.5rem; /* 24 */
   --step-3: 2.25rem; /* 36 */
-  --step-4: 3rem; /* 48 */
-  --step-5: 4.5rem; /* 72 */
+  --step-4: 2.75rem; /* 44 */
+  --step-5: 3.5rem; /* 56 */
 
-  --leading: 1.62;
-  --leading-cjk: 1.9;
+  --leading: 1.6;
+  --leading-cjk: 1.85;
   --measure: 34em;
 
   /* Space: multiples of the body line */
@@ -83,11 +86,18 @@
 
   --gutter: 16px;
   --rule: 1px solid var(--paper-edge);
-  --radius-control: 2px;
+  --radius-control: 10px;
+  --radius-card: 14px;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  /* Soft surfaces: figures, asides and controls sit on a card, not in a box. */
+  --card: color-mix(in oklab, var(--paper-shade) 70%, var(--paper));
+  --card-strong: color-mix(in oklab, var(--ink) 10%, var(--paper));
 
   /* Figure plates */
-  --plate-bg: var(--paper);
-  --plate-border: 1px solid var(--ink-faint);
+  --plate-bg: var(--card);
+  --plate-border: 0;
+  --plate-pad: 10px;
 }
 
 @media (min-width: 720px) {
@@ -99,9 +109,9 @@
 @media (max-width: 719px) {
   :root {
     --step-0: 1.0625rem; /* 17 */
-    --step-3: 1.875rem;
-    --step-4: 2.25rem;
-    --step-5: 3rem;
+    --step-3: 1.75rem;
+    --step-4: 2.125rem;
+    --step-5: 2.5rem;
   }
 }
 

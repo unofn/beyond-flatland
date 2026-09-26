@@ -1,4 +1,5 @@
-/* Controls for figures. Engraved-instrument feel: hairlines, no pills. */
+/* Controls for figures. Soft book style: rounded, tactile, quiet until touched.
+   Surfaces are translucent ink so they read on paper and on figure cards alike. */
 .ctl-row {
   display: flex;
   flex-wrap: wrap;
@@ -13,7 +14,7 @@
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 0.6em;
+  gap: 0.7em;
   min-width: 12em;
   flex: 1 1 12em;
 }
@@ -42,79 +43,115 @@
   --ctl-color: var(--ink);
   appearance: none;
   width: 100%;
-  height: 28px; /* touch target */
+  height: 32px; /* touch target */
   background: transparent;
   margin: 0;
   cursor: pointer;
 }
 
 .ctl-slider input[type='range']::-webkit-slider-runnable-track {
-  height: 1px;
-  background: var(--ink-faint);
+  height: 3px;
+  border-radius: 3px;
+  background: color-mix(in oklab, var(--ink) 18%, transparent);
 }
 .ctl-slider input[type='range']::-moz-range-track {
-  height: 1px;
-  background: var(--ink-faint);
+  height: 3px;
+  border-radius: 3px;
+  background: color-mix(in oklab, var(--ink) 18%, transparent);
 }
 .ctl-slider input[type='range']::-webkit-slider-thumb {
   appearance: none;
-  width: 14px;
-  height: 14px;
-  margin-top: -7px;
-  background: var(--paper);
-  border: 1.5px solid var(--ctl-color);
-  transform: rotate(45deg);
+  width: 18px;
+  height: 18px;
+  margin-top: -7.5px;
+  border-radius: 50%;
+  background: var(--ctl-color);
+  border: 3px solid var(--paper);
+  box-shadow: 0 0 0 1px var(--ctl-color);
+  transition: transform 150ms var(--ease);
 }
 .ctl-slider input[type='range']::-moz-range-thumb {
   width: 12px;
   height: 12px;
-  border-radius: 0;
-  background: var(--paper);
-  border: 1.5px solid var(--ctl-color);
-  transform: rotate(45deg);
+  border-radius: 50%;
+  background: var(--ctl-color);
+  border: 3px solid var(--paper);
+  box-shadow: 0 0 0 1px var(--ctl-color);
+  transition: transform 150ms var(--ease);
+}
+.ctl-slider input[type='range']:hover::-webkit-slider-thumb,
+.ctl-slider input[type='range']:focus-visible::-webkit-slider-thumb {
+  transform: scale(1.12);
+}
+.ctl-slider input[type='range']:active::-webkit-slider-thumb {
+  transform: scale(1.25);
+}
+.ctl-slider input[type='range']:active::-moz-range-thumb {
+  transform: scale(1.25);
 }
 
 .ctl-seg {
   display: inline-flex;
   flex-wrap: wrap;
   max-width: 100%;
-  border: 1px solid var(--ink-faint);
+  gap: 2px;
+  padding: 3px;
   border-radius: var(--radius-control);
-  overflow: hidden;
+  background: color-mix(in oklab, var(--ink) 7%, transparent);
 }
 .ctl-seg button {
+  flex: 1 0 auto;
   font: inherit;
   color: var(--ink-soft);
   background: transparent;
   border: 0;
-  padding: 0.45em 0.8em;
-  min-height: 32px;
+  border-radius: calc(var(--radius-control) - 2px);
+  padding: 0.4em 0.85em;
+  min-height: 30px;
   cursor: pointer;
+  transition:
+    background-color 180ms var(--ease),
+    color 180ms var(--ease),
+    transform 120ms var(--ease);
 }
-.ctl-seg button {
-  flex: 1 0 auto;
-  box-shadow: -1px 0 0 var(--ink-faint), 0 -1px 0 var(--ink-faint); /* hairlines that survive wrapping */
+.ctl-seg button:hover {
+  color: var(--ink);
 }
 .ctl-seg button[aria-pressed='true'] {
-  color: var(--paper);
-  background: var(--ink);
+  color: var(--ink);
+  background: var(--paper);
 }
 
 .ctl-button {
   font: inherit;
   color: var(--ink);
-  background: transparent;
-  border: 1px solid var(--ink-faint);
+  background: color-mix(in oklab, var(--ink) 7%, transparent);
+  border: 0;
   border-radius: var(--radius-control);
-  padding: 0.45em 0.9em;
-  min-height: 32px;
+  padding: 0.5em 1em;
+  min-height: 34px;
   cursor: pointer;
+  transition:
+    background-color 150ms var(--ease),
+    transform 120ms var(--ease);
 }
 .ctl-button:hover {
-  border-color: var(--ink);
+  background: color-mix(in oklab, var(--ink) 13%, transparent);
+}
+.ctl-button:active,
+.ctl-seg button:active {
+  transform: scale(0.96);
 }
 
 .ctl-plane {
   font-style: italic;
   white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ctl-seg button,
+  .ctl-button,
+  .ctl-slider input[type='range']::-webkit-slider-thumb {
+    transition: none;
+  }
 }

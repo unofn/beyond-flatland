@@ -44,8 +44,9 @@
 
 .d7-tip {
   background: var(--paper);
-  border: 1px solid var(--ink-faint);
-  padding: 4px 8px;
+  border-radius: 8px;
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--ink) 12%, transparent);
+  padding: 5px 9px;
   color: var(--ink);
   max-width: calc(100% - 8px);
   z-index: 1;
@@ -67,7 +68,8 @@
 .d7-swatch__chip {
   width: 28px;
   height: 28px;
-  border: 1px solid var(--ink);
+  border-radius: 8px;
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--ink) 20%, transparent);
 }
 
 /* Four sliders sit two to a row on a phone instead of stacking four deep. */
