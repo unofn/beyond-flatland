@@ -1,6 +1,7 @@
 import { Canvas, useThree } from '@react-three/fiber';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import type { OrthographicCamera, PerspectiveCamera } from 'three';
+import { DragHint } from './DragHint';
 
 export interface PaperCanvasProps {
   children: ReactNode;
@@ -83,6 +84,7 @@ export function PaperCanvas({ children, depth, extent = 2.4, label, role = 'img'
         {ortho ? <FitOrtho extent={extent} /> : <FitPerspective extent={extent} />}
         {children}
       </Canvas>
+      {bind?.onPointerDown && <DragHint show={onScreen} />}
     </div>
   );
 }

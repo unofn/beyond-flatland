@@ -9,7 +9,7 @@ import {
 } from '../../lib/nd';
 import type { Locale } from '../../i18n/locales';
 import { PaperCanvas, useNdRotation } from '../scene';
-import { Button, Segmented, Slider, axisName } from '../ui';
+import { Button, Segmented, Slider, ANGLE_DETENTS, axisName } from '../ui';
 import { LabScene, type SceneConfig } from './LabScene';
 import {
   FAMILIES,
@@ -235,6 +235,7 @@ export default function Lab({ locale }: { locale: Locale }) {
           value={state.angles[k] ?? 0}
           min={-Math.PI}
           max={Math.PI}
+          detents={ANGLE_DETENTS}
           onChange={(x) => setAngle(k, x)}
           format={deg}
           valueText={(x) => `${label} ${deg(x)}`}
@@ -337,6 +338,7 @@ export default function Lab({ locale }: { locale: Locale }) {
                   value={offset}
                   min={range[0]}
                   max={range[1]}
+                  detents={range[0] < 0 && range[1] > 0 ? [0] : undefined}
                   step={Math.max((range[1] - range[0]) / 400, 0.001)}
                   onChange={(x) => patch({ offset: x })}
                   format={(x) => x.toFixed(2)}
@@ -354,6 +356,7 @@ export default function Lab({ locale }: { locale: Locale }) {
                         value={phi}
                         min={-Math.PI}
                         max={Math.PI}
+                        detents={ANGLE_DETENTS}
                         format={deg}
                         valueText={(x) => `${str.tilt} ${axisName(b)}${axisName(a)} ${deg(x)}`}
                         onChange={(x) => {

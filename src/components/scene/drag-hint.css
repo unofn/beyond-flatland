@@ -1,0 +1,31 @@
+.drag-hint {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--ink-soft);
+  background: color-mix(in oklab, var(--paper) 80%, transparent);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition:
+    opacity 500ms var(--ease) 700ms,
+    transform 500ms var(--ease) 700ms;
+}
+.drag-hint.is-on {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .drag-hint {
+    transition: none;
+    transform: none;
+  }
+}

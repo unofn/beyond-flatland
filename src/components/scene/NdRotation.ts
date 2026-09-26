@@ -27,6 +27,9 @@ export class NdRotation {
   view: Mat;
   spinMat: Mat;
   anglesMat: Mat;
+  /** Slider angles: where they are heading, and where the drawing shows them now. */
+  private angleTarget: Partial<Record<PlaneKey, number>>;
+  private angleNow: Partial<Record<PlaneKey, number>>;
   spin: Partial<Record<PlaneKey, number>>;
   playing = false;
   /** Release velocity in px/ms; decays in tick() so a flicked object coasts to a stop. */
@@ -44,11 +47,24 @@ export class NdRotation {
     this.view = this.initialView;
     this.spinMat = identity(n);
     this.anglesMat = rotationFromAngles(n, angles);
+    this.angleTarget = { ...angles };
+    this.angleNow = { ...angles };
     this.spin = spin;
   }
 
+  /**
+   * New slider angles. The drawing follows them with a short damped glide in
+   * tick() (instantly under reduced motion), so dragging a slider feels
+   * weighted rather than stepped.
+   */
   setAngles(angles: Partial<Record<PlaneKey, number>>) {
-    this.anglesMat = rotationFromAngles(this.n, angles);
+    this.angleTarget = { ...angles };
+    if (this.reducedMotion) this.snapAngles();
+  }
+
+  private snapAngles() {
+    this.angleNow = { ...this.angleTarget };
+    this.anglesMat = rotationFromAngles(this.n, this.angleNow);
     this.version++;
   }
 
@@ -89,6 +105,24 @@ export class NdRotation {
   }
 
   tick(dt: number) {
+    // Slider angles glide toward their targets (time constant ~70 ms).
+    const keys = new Set([...Object.keys(this.angleTarget), ...Object.keys(this.angleNow)] as PlaneKey[]);
+    let gliding = false;
+    const k = 1 - Math.exp(-dt * 14);
+    for (const key of keys) {
+      const to = this.angleTarget[key] ?? 0;
+      const from = this.angleNow[key] ?? 0;
+      if (Math.abs(to - from) < 1e-4) {
+        if (from !== to) this.angleNow[key] = to;
+        continue;
+      }
+      this.angleNow[key] = from + (to - from) * k;
+      gliding = true;
+    }
+    if (gliding || keys.size !== Object.keys(this.angleNow).length) {
+      this.anglesMat = rotationFromAngles(this.n, this.angleNow);
+      this.version++;
+    }
     // Inertia runs whether or not the spin is playing.
     if (!this.dragging && (Math.abs(this.vx) > 0.003 || Math.abs(this.vy) > 0.003)) {
       this.drag(this.vx * dt * 1000, this.vy * dt * 1000);
@@ -165,14 +199,21 @@ export function useNdRotation(opts: NdRotationOptions & { autoplay?: boolean }) 
   const last = useRef<{ x: number; y: number; t: number; id: number; touch: boolean; vx: number; vy: number } | null>(
     null,
   );
+  const sens = useRef(0.008);
   const bind = useMemo(
     () => ({
       style: { touchAction: 'pan-y', cursor: opts.n >= 3 ? 'grab' : undefined } as React.CSSProperties,
       onPointerDown: (e: React.PointerEvent) => {
+        const el = e.currentTarget as HTMLElement;
+        const r = el.getBoundingClientRect();
+        // A sweep across the narrower side of the drawing turns it about half a turn.
+        sens.current = Math.PI / Math.max(220, Math.min(r.width, r.height));
         last.current = { x: e.clientX, y: e.clientY, t: performance.now(), id: e.pointerId, touch: e.pointerType === 'touch', vx: 0, vy: 0 };
         rot.hold();
         rot.dragging = true;
-        (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+        el.setPointerCapture(e.pointerId);
+        el.style.cursor = 'grabbing';
+        window.dispatchEvent(new CustomEvent('bf:dragged'));
       },
       onPointerMove: (e: React.PointerEvent) => {
         const l = last.current;
@@ -187,16 +228,20 @@ export function useNdRotation(opts: NdRotationOptions & { autoplay?: boolean }) 
         l.x = e.clientX;
         l.y = e.clientY;
         l.t = now;
-        rot.drag(dx, dy);
+        rot.drag(dx, dy, sens.current);
       },
-      onPointerUp: () => {
+      onPointerUp: (e: React.PointerEvent) => {
+        (e.currentTarget as HTMLElement).style.cursor = '';
         const l = last.current;
         // A pause before release means "put it down", not "flick".
-        if (l && performance.now() - l.t < 80) rot.release(l.vx, l.vy);
+        // Velocities are in px/ms; convert to the default-sensitivity units tick() uses.
+        const f = sens.current / 0.008;
+        if (l && performance.now() - l.t < 80) rot.release(l.vx * f, l.vy * f);
         else rot.release(0, 0);
         last.current = null;
       },
-      onPointerCancel: () => {
+      onPointerCancel: (e: React.PointerEvent) => {
+        (e.currentTarget as HTMLElement).style.cursor = '';
         rot.release(0, 0);
         last.current = null;
       },

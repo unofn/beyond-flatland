@@ -40,6 +40,11 @@ export interface NdObjectProps {
   vertexSize?: number;
   /** Uniform scale in world units. */
   scale?: number;
+  /**
+   * Draw the edges in, pen-stroke by pen-stroke, the first time the figure is
+   * on screen (~0.9 s). Default true; off under reduced motion.
+   */
+  reveal?: boolean;
 }
 
 /**
@@ -64,6 +69,7 @@ export function NdObject({
   faceColors,
   vertexSize,
   scale = 1,
+  reveal = true,
 }: NdObjectProps) {
   const tokens = useTokens();
   const ink = useInkSegments(lineWidth);
@@ -100,6 +106,8 @@ export function NdObject({
   const reduced = useReducedMotion();
   // 1 = perspective, 0 = orthographic; eased so switching modes morphs instead of jumping.
   const persp = useRef((projection?.mode ?? 'perspective') === 'perspective' ? 1 : 0);
+  // Reveal clock: set on the first rendered frame, which PaperCanvas only runs on screen.
+  const revealStart = useRef<number | null>(null);
   const lastKey = useRef('');
   const lastPoly = useRef<Polytope | null>(null);
 
@@ -110,7 +118,12 @@ export function NdObject({
     const target = (projection?.mode ?? 'perspective') === 'perspective' ? 1 : 0;
     if (reduced || Math.abs(target - persp.current) < 1e-3) persp.current = target;
     else persp.current += (target - persp.current) * (1 - Math.exp(-dt * 9));
-    const key = `${persp.current.toFixed(4)}|${rotation.version}|${depth}|${tokens.ink}|${edgeOpacity?.join(',')}|${projection?.mode}|${projection?.distance}|${scale}|${color}|${edgeColors?.join(',')}|${faceColors?.join(',')}|${vertexSize}|${pre ? (preKey ?? Math.random()) : ''}`;
+    let drawn = 1;
+    if (reveal && !reduced) {
+      if (revealStart.current === null) revealStart.current = state.clock.elapsedTime;
+      drawn = Math.min(1, (state.clock.elapsedTime - revealStart.current) / 0.9);
+    }
+    const key = `${drawn.toFixed(3)}|${persp.current.toFixed(4)}|${rotation.version}|${depth}|${tokens.ink}|${edgeOpacity?.join(',')}|${projection?.mode}|${projection?.distance}|${scale}|${color}|${edgeColors?.join(',')}|${faceColors?.join(',')}|${vertexSize}|${pre ? (preKey ?? Math.random()) : ''}`;
     if (key === lastKey.current && poly === lastPoly.current) return;
     lastKey.current = key;
     lastPoly.current = poly;
@@ -142,9 +155,17 @@ export function NdObject({
     });
 
     const { pos, col } = buffers;
+    const E = poly.edges.length;
     poly.edges.forEach(([a, b], e) => {
       const pa = projected[a]!;
-      const pb = projected[b]!;
+      let pb = projected[b]!;
+      if (drawn < 1) {
+        // Staggered strokes: each edge starts a little after the previous one, eased.
+        const stagger = 0.6;
+        const u = Math.min(1, Math.max(0, drawn * (1 + stagger) - (stagger * e) / Math.max(E - 1, 1)));
+        const eased = 1 - (1 - u) ** 3;
+        pb = pa.map((x, k) => x + (pb[k]! - x) * eased);
+      }
       pos.set([pa[0]!, pa[1]!, pa[2]!, pb[0]!, pb[1]!, pb[2]!], e * 6);
       const css = edgeColors?.[e] ?? (color === 'axis' ? axisColor(tokens, axes[e]!) : color === 'ink' ? tokens.ink : color);
       const base = rgb(css);
@@ -191,6 +212,7 @@ export function NdObject({
       });
       attr.needsUpdate = true;
       cattr.needsUpdate = true;
+      (faceMesh.material as MeshBasicMaterial).opacity = 0.035 * drawn;
     }
   });
 

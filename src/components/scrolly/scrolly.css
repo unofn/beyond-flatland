@@ -35,18 +35,34 @@
 }
 
 .step {
+  position: relative;
   min-height: 60svh;
   opacity: 0.6;
   padding-left: 1em;
-  border-left: 2px solid transparent;
-  transition:
-    opacity 400ms var(--ease),
-    border-color 400ms var(--ease);
+  transition: opacity 400ms var(--ease);
+}
+
+/* The reading mark: a red rule that grows down the active step. */
+.step::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.35em;
+  bottom: 0;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--accent);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 600ms var(--ease);
 }
 
 .step.is-active {
   opacity: 1;
-  border-left-color: var(--accent);
+}
+
+.step.is-active::before {
+  transform: scaleY(1);
 }
 
 .step > :last-child {

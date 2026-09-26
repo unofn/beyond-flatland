@@ -13,7 +13,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { cell24, crossPolytope, hypercube, simplex, type Polytope, type ProjectionMode } from '../../../lib/nd';
 import { NdObject, PaperCanvas, useNdRotation } from '../../scene';
-import { Button, FigureShell, Segmented, Slider } from '../../ui';
+import { Button, FigureShell, Segmented, Slider, ANGLE_DETENTS } from '../../ui';
 import { useScrolly } from '../../scrolly/store';
 import { defineStrings } from '../../../i18n/ui';
 import type { Locale } from '../../../i18n/locales';
@@ -163,6 +163,7 @@ export default function TesseractShadow({ locale, scrolly }: { locale: Locale; s
           value={angles[key]}
           min={-Math.PI}
           max={Math.PI}
+          detents={ANGLE_DETENTS}
           onChange={(v) => setPlane(key, v)}
           format={deg}
         />

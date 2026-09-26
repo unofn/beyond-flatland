@@ -1,4 +1,4 @@
-export { Slider } from './Slider';
+export { Slider, ANGLE_DETENTS } from './Slider';
 export { Segmented } from './Segmented';
 export { Button } from './Button';
 export { FigureShell } from './FigureShell';

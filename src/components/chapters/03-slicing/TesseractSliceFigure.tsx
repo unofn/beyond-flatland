@@ -139,6 +139,7 @@ export default function TesseractSliceFigure({ locale, scrolly }: { locale: Loca
             value={w}
             min={lo - MARGIN * range}
             max={hi + MARGIN * range}
+            detents={[(lo + hi) / 2]}
             onChange={(v) => setT((v - lo) / range)}
             format={(v) => (t < 0 || t > 1 ? str.empty : (Math.abs(v) < 0.005 ? 0 : v).toFixed(2))}
           />
