@@ -31,24 +31,17 @@ pnpm shots --base http://localhost:4321   # Playwright device screenshots into s
 
 - **Touch gestures are untested on real devices.** Horizontal drag rotates and
   vertical swipe scrolls (`touch-action: pan-y`); verified only by emulation.
-- **Axis colours and colour-vision deficiency.** Under deuteranopia the x (red)
-  and y (dark yellow) strokes are hard to tell apart, and in dark mode some axis
-  colours fall outside the dataviz palette's lightness band. Figures label axes
-  in text, which mitigates it; a proper fix is a token change in
-  `src/styles/tokens.css` checked against every chapter.
+- **Yellow strokes are 2.7:1 against the paper.** The four axis colours pass the
+  colour-blindness checks (see `src/styles/tokens.css`), but y-axis strokes sit
+  below 3:1; this relies on axes always being labelled in text.
 - **Axis colouring only means something for hypercubes.** For simplices,
   cross-polytopes and the 24-cell, `edgeAxes` picks a dominant axis somewhat
   arbitrarily (chapter 4 and the lab use plain ink or accept this).
 - **Chapter-local renderers.** Chapters 1, 3, 5 and the lab draw with their own
-  renderers on top of `useInkSegments` (vertex dots, orbitable sections,
-  per-cell colours). The shared `NdObject` now supports most of this
-  (`vertexSize`, `edgeColors`, `faceColors`, `preKey`); migrating is optional.
-  `SectionView` still lacks drag rotation and depth fading (chapter 3's
-  `InkSection` has them).
-- **Lab:** the URL drops `n` for the 24-cell; the "cut at" range ignores
-  accumulated spin, so a spinning section can go empty.
-- **Phones:** in figures with two slider rows (end of chapter 1, chapter 3,
-  chapter 2's triple view) the drawing area is small (~180–240 px tall).
+  renderers on top of `useInkSegments`. The shared `NdObject` now supports most
+  of what they needed (`vertexSize`, `edgeColors`, `faceColors`, `preKey`);
+  migrating is optional. `SectionView` still lacks drag rotation and depth
+  fading (chapter 3's `InkSection` has them).
 - **Chinese justification:** a line that must fit an unbreakable number such as
   "52%" gets wide gaps between characters.
 - **Build warnings:** `MODULE_LEVEL_DIRECTIVE` warnings for MDX files with
