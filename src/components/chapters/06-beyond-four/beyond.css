@@ -161,7 +161,7 @@
 }
 .bf-table tbody tr.is-current > th {
   box-shadow: inset 2px 0 0 var(--accent);
-  color: var(--accent);
+  color: var(--ink);
 }
 .bf-table__empty {
   background: transparent;
@@ -170,14 +170,16 @@
   font: inherit;
   min-width: 2.4em;
   min-height: 28px;
-  color: var(--accent);
+  color: var(--ink);
   background: transparent;
   border: 1px solid var(--accent);
   border-radius: var(--radius-control);
   cursor: pointer;
 }
+/* Small text stays in ink (the red is too dim for it in dark mode); a red stroke carries the colour. */
 .bf-table__answer {
-  color: var(--accent);
+  color: var(--ink);
+  box-shadow: inset 0 -2px 0 var(--accent);
 }
 .bf-count__more {
   font-size: var(--step--1);

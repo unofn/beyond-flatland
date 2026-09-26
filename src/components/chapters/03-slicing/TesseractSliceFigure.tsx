@@ -47,6 +47,13 @@ const FREE = { o: 3, t: 0.5 };
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
+/**
+ * Starting view. The turntable default sees the vertex-first octahedron almost
+ * edge-on; a small x–y roll first stands one of its diagonals nearly upright
+ * while the cube, the hexagonal prism and the tetrahedron still read at once.
+ */
+const VIEW = { '0,1': 0.45, '0,2': 0.6, '1,2': -0.4 };
+
 export default function TesseractSliceFigure({ locale, scrolly }: { locale: Locale; scrolly?: string }) {
   const str = s[locale];
   const { step, progress } = useScrolly(scrolly ?? '');
@@ -54,7 +61,7 @@ export default function TesseractSliceFigure({ locale, scrolly }: { locale: Loca
   const cube = useMemo(() => hypercube(3, 1), []);
   const [o, setO] = useState(0);
   const [t, setT] = useState(0.5);
-  const { rot, bind } = useNdRotation({ n: 3 });
+  const { rot, bind } = useNdRotation({ n: 3, initialView: VIEW });
 
   const lastStep = useRef<number | null>(null);
   useEffect(() => {
@@ -126,6 +133,7 @@ export default function TesseractSliceFigure({ locale, scrolly }: { locale: Loca
             />
           </div>
           <Slider
+            className="s03-w"
             label={<span className="axis-3">w</span>}
             axis={3}
             value={w}
@@ -134,7 +142,14 @@ export default function TesseractSliceFigure({ locale, scrolly }: { locale: Loca
             onChange={(v) => setT((v - lo) / range)}
             format={(v) => (t < 0 || t > 1 ? str.empty : (Math.abs(v) < 0.005 ? 0 : v).toFixed(2))}
           />
-          <Button onClick={() => rot.reset()}>{str.reset}</Button>
+          <Button className="s03-reset" onClick={() => rot.reset()} aria-label={str.reset} title={str.reset}>
+            <span className="s03-long" aria-hidden="true">
+              {str.reset}
+            </span>
+            <span className="s03-short" aria-hidden="true">
+              ↺
+            </span>
+          </Button>
         </>
       }
     >
@@ -171,5 +186,18 @@ const css = `
 .s03-inset__cap {
   padding-right: 4px;
   font-size: 11px; line-height: 1.25; color: var(--ink-soft);
+}
+.s03-short { display: none; }
+/* Phones: one row of controls, so the drawing keeps the height. The group's
+   name, the slider's value and the button's name stay for screen readers. */
+@media (max-width: 599px) {
+  .s03-first > span { display: none; }
+  .s03-first .ctl-seg button { padding-left: 0.5em; padding-right: 0.5em; }
+  .ctl-row > .ctl-slider.s03-w { flex: 1 1 5em; min-width: 5em; }
+  .s03-w .ctl-slider__value { display: none; }
+  .s03-w.ctl-slider { grid-template-columns: auto 1fr; }
+  .s03-reset { min-width: 32px; padding-left: 0.6em; padding-right: 0.6em; }
+  .s03-long { display: none; }
+  .s03-short { display: inline; }
 }
 `;

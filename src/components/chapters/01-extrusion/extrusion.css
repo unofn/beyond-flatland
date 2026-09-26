@@ -160,6 +160,50 @@
   flex-basis: 100%;
 }
 
+.ext-short {
+  display: none;
+}
+
+/* Phones: the drag and turn sliders share one row with an icon reset button,
+   so the drawing keeps its height. Words and values stay for screen readers. */
+@media (max-width: 599px) {
+  .ext-ctl--pair,
+  .ext-ctl--row.ext-ctl--pair {
+    flex: 1 1 6em;
+  }
+  .ext-ctl > .ctl-slider {
+    min-width: 0;
+  }
+  .ext-ctl--pair .ctl-slider {
+    grid-template-columns: auto 1fr;
+  }
+  .ext-ctl--pair .ctl-slider__value {
+    display: none;
+  }
+  .ext-ctl--pair .ext-long {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .ext-ctl--pair .ext-short {
+    display: inline;
+  }
+  .ext-reset {
+    min-width: 32px;
+    padding-left: 0.6em;
+    padding-right: 0.6em;
+  }
+  .ext-reset .ext-long-text {
+    display: none;
+  }
+  .ext-reset .ext-short {
+    display: inline;
+  }
+}
+
 @media (max-width: 480px) {
   .ext-count table {
     font-size: 0.84em;

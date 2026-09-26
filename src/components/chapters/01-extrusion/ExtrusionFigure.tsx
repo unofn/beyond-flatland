@@ -13,7 +13,7 @@ import { useFrame } from '@react-three/fiber';
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { matMul, rotationFromAngles, type Mat } from '../../../lib/nd';
 import { PaperCanvas, axisColor, rgb, useInkSegments, useNdRotation, useTokens, type NdRotation } from '../../scene';
-import { Button, FigureShell, Slider, axisName } from '../../ui';
+import { Button, FigureShell, PlaneLabel, Slider, axisName } from '../../ui';
 import { useScrolly } from '../../scrolly/store';
 import { defineStrings } from '../../../i18n/ui';
 import type { Locale } from '../../../i18n/locales';
@@ -36,6 +36,7 @@ const s = defineStrings({
     dragPre: '沿 ',
     dragPost: ' 拖',
     turn: '在 xw 平面里转',
+    turnShort: '转',
     reset: '复位视角',
   },
   en: {
@@ -52,6 +53,7 @@ const s = defineStrings({
     dragPre: 'Drag along ',
     dragPost: '',
     turn: 'Turn in xw',
+    turnShort: 'Turn',
     reset: 'Reset view',
   },
 });
@@ -184,11 +186,20 @@ export default function ExtrusionFigure({
   const shapeName = [str.shape0, str.shape1, str.shape2, str.shape3, str.shape4][dim]!;
   const label = `${str.label}. ${shapeName}: ${tally}.`;
 
+  // On phones the words fold away (still read aloud) so both sliders share one row.
   const axisLabel = (k: number): ReactNode => (
     <>
-      {str.dragPre}
+      <span className="ext-long">{str.dragPre}</span>
       <span className={`axis-${k}`}>{axisName(k)}</span>
-      {str.dragPost}
+      <span className="ext-long">{str.dragPost}</span>
+    </>
+  );
+  const turnLabel = (
+    <>
+      <span className="ext-long">{str.turn}</span>
+      <span className="ext-short" aria-hidden="true">
+        {str.turnShort} <PlaneLabel i={0} j={3} />
+      </span>
     </>
   );
 
@@ -197,7 +208,7 @@ export default function ExtrusionFigure({
       label={str.label}
       controls={
         <>
-          <div className={['ext-ctl', showTurn && 'ext-ctl--row'].filter(Boolean).join(' ')}>
+          <div className={['ext-ctl', showTurn && 'ext-ctl--row ext-ctl--pair'].filter(Boolean).join(' ')}>
             <Slider
               label={axisLabel(axis)}
               axis={axis}
@@ -209,9 +220,9 @@ export default function ExtrusionFigure({
             />
           </div>
           {showTurn && (
-            <div className="ext-ctl">
+            <div className="ext-ctl ext-ctl--pair">
               <Slider
-                label={str.turn}
+                label={turnLabel}
                 axis={3}
                 value={xw}
                 min={-Math.PI}
@@ -221,7 +232,14 @@ export default function ExtrusionFigure({
               />
             </div>
           )}
-          <Button onClick={() => rot.reset()}>{str.reset}</Button>
+          <Button className="ext-reset" onClick={() => rot.reset()} aria-label={str.reset} title={str.reset}>
+            <span className="ext-long-text" aria-hidden="true">
+              {str.reset}
+            </span>
+            <span className="ext-short" aria-hidden="true">
+              ↺
+            </span>
+          </Button>
         </>
       }
     >

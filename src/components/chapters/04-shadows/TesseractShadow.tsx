@@ -12,7 +12,7 @@
  */
 import { useEffect, useMemo, useState } from 'react';
 import { cell24, crossPolytope, hypercube, simplex, type Polytope, type ProjectionMode } from '../../../lib/nd';
-import { NdObject, NdRotation, PaperCanvas, useNdRotation } from '../../scene';
+import { NdObject, PaperCanvas, useNdRotation } from '../../scene';
 import { Button, FigureShell, Segmented, Slider } from '../../ui';
 import { useScrolly } from '../../scrolly/store';
 import { defineStrings } from '../../../i18n/ui';
@@ -96,21 +96,6 @@ function farCell(t: Polytope): Polytope {
   };
 }
 
-/** Reads another rotation without advancing it, so a second NdObject can share it. */
-class Follower extends NdRotation {
-  private src: NdRotation;
-  constructor(src: NdRotation) {
-    super({ n: src.n });
-    this.src = src;
-  }
-  override tick() {
-    this.version = this.src.version;
-  }
-  override matrix() {
-    return this.src.matrix();
-  }
-}
-
 const smooth = (t: number) => {
   const x = Math.min(1, Math.max(0, (t - 0.08) / 0.8));
   return x * x * (3 - 2 * x);
@@ -142,7 +127,6 @@ export default function TesseractShadow({ locale, scrolly }: { locale: Locale; s
   const [driven, setDriven] = useState(true);
 
   const { rot, bind } = useNdRotation({ n: 4, angles });
-  const follower = useMemo(() => new Follower(rot), [rot]);
 
   // Each step opens its panel; entering the x–w step hands x–w back to the scroll.
   useEffect(() => {
@@ -248,7 +232,9 @@ export default function TesseractShadow({ locale, scrolly }: { locale: Locale; s
     >
       <PaperCanvas depth={3} extent={3.4} label={label} bind={bind}>
         {/* key: NdObject caches on rotation/projection, not on poly, so remount per shape.
-            Only the tesseract's edges run along axes; the others are drawn in plain ink. */}
+            Only the tesseract's edges run along axes; the others are drawn in plain ink.
+            The bold far cell shares the rotation (advanced once per frame) and draws
+            edges only, so its faces are not laid down twice. */}
         <NdObject
           key={shape}
           poly={shapes[shape]}
@@ -258,7 +244,15 @@ export default function TesseractShadow({ locale, scrolly }: { locale: Locale; s
           color={shape === 'tesseract' ? 'axis' : 'ink'}
         />
         {shape === 'tesseract' && (
-          <NdObject key="far" poly={far} rotation={follower} depth={3} projection={{ mode, distance }} lineWidth={4} />
+          <NdObject
+            key="far"
+            poly={far}
+            rotation={rot}
+            depth={3}
+            projection={{ mode, distance }}
+            lineWidth={4}
+            faces={false}
+          />
         )}
       </PaperCanvas>
     </FigureShell>

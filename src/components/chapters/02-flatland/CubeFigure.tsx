@@ -4,7 +4,7 @@
  * never changes or a point that grows into a triangle, then a hexagon.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { complementBasis, dot, hypercube, slice, sliceRange, type Vec } from '../../../lib/nd';
+import { complementBasis, dot, hypercube, slice, sliceRange, type Polytope, type Vec } from '../../../lib/nd';
 import { Canvas2D, type Draw2DContext } from '../../scene/Canvas2D';
 import { Button, FigureShell, Segmented, Slider } from '../../ui';
 import { defineStrings } from '../../../i18n/ui';
@@ -60,6 +60,25 @@ const TOP = Math.PI / 2;
 /** Seconds for one pass from above to below. */
 const PASS = 7;
 
+/** The cube in the plane's frame: (in-plane, in-plane, height above the plane). */
+function planeFrame(cube: Polytope, normal: Vec): [number, number, number][] {
+  const [e1, e2] = complementBasis(normal) as [Vec, Vec];
+  const u = normal.map((x) => x / Math.hypot(...normal));
+  return cube.vertices.map((v) => [dot(v, e1), dot(v, e2), dot(v, u)] as [number, number, number]);
+}
+
+/** Every cube vertex at the top and bottom of the slider, in both orientations. */
+const ENVELOPE: [number, number, number][] = (() => {
+  const cube = hypercube(3);
+  return (Object.values(NORMALS) as Vec[]).flatMap((normal) => {
+    const end = sliceRange(cube, normal)[1] + MARGIN;
+    return planeFrame(cube, normal).flatMap(([x, y, z]) => [
+      [x, y, z + end] as [number, number, number],
+      [x, y, z - end] as [number, number, number],
+    ]);
+  });
+})();
+
 interface Box {
   x: number;
   y: number;
@@ -76,12 +95,7 @@ export default function CubeFigure({ locale }: { locale: Locale }) {
   const [c, setC] = useState(0.55 * Math.sqrt(3));
   const [playing, setPlaying] = useState(false);
 
-  // The cube in the plane's frame: (in-plane, in-plane, height above the plane).
-  const frame = useMemo(() => {
-    const [e1, e2] = complementBasis(normal) as [Vec, Vec];
-    const u = normal.map((x) => x / Math.hypot(...normal));
-    return cube.vertices.map((v) => [dot(v, e1), dot(v, e2), dot(v, u)] as [number, number, number]);
-  }, [cube, normal]);
+  const frame = useMemo(() => planeFrame(cube, normal), [cube, normal]);
 
   // The plane sits at height 0 and the cube's centre at height c, so the cut
   // is at offset −c in the cube's own coordinates.
@@ -142,12 +156,11 @@ export default function CubeFigure({ locale }: { locale: Locale }) {
         [plane, plane * 0.62],
         [-plane, plane * 0.62],
       ];
-      // Fit the plane plus the region the cube occupies while it crosses.
-      // Right at the ends of the slider a corner may leave the panel.
-      const V = 2.6;
+      // Fit the plane plus the cube at both ends of the slider in either
+      // orientation; the projection is linear, so every height in between fits too.
       const env: [number, number, number][] = [
         ...corners.map(([x, y]) => [x, y, 0] as [number, number, number]),
-        ...[-V, V].flatMap((z) => [[-1.7, 0, z], [1.7, 0, z], [0, -1.7, z], [0, 1.7, z]] as [number, number, number][]),
+        ...ENVELOPE,
       ];
       const pr = env.map(([x, y, z]) => oblique(x, y, z, AZ, EL));
       const minX = Math.min(...pr.map((p) => p[0]));
